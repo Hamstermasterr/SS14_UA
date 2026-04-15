@@ -8,6 +8,7 @@ station-ai-has-no-power-for-upload = Завантаження не вдалос�
 station-ai-is-too-damaged-for-upload = Завантаження не вдалося — ядро ШІ потребує ремонту.
 station-ai-core-losing-power = Ядро ШІ працює на резервному живленні.
 station-ai-core-critical-power = Критично низький рівень живлення ядра ШІ. Необхідно відновити зовнішнє живлення, інакше може статися серйозне пошкодження даних!
+station-ai-core-taking-damage = Ваше ядро ШІ зазнає фізичних пошкоджень.
 
 # Ghost role
 station-ai-ghost-role-name = Station AI

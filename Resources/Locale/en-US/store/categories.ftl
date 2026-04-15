@@ -12,17 +12,18 @@ store-category-allies = Помічники
 store-category-job = Робота
 store-category-wearables = Одяг
 store-category-pointless = Пустощі
+store-category-objective = Цілі
 store-discounted-items = Знижки
 
 # Revenant
 store-category-abilities = Здібності
 
 # Wizard
-store-caregory-spellbook-offensive = Offensive Spells
-store-caregory-spellbook-defensive = Defensive Spells
-store-caregory-spellbook-utility = Utility Spells
-store-caregory-spellbook-equipment = Wizard Equipment
-store-caregory-spellbook-events = Event Spells
+store-category-spellbook-offensive = Бойові заклинання
+store-category-spellbook-defensive = Захисні заклинання
+store-category-spellbook-utility = Допоміжні заклинання
+store-category-spellbook-equipment = Спорядження чарівника
+store-category-spellbook-events = Особливі заклинання
 
 # Nukie Delivery
-store-category-nukie-delivery = Offers
+store-category-nukie-delivery = Пропозиції

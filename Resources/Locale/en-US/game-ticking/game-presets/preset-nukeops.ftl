@@ -1,4 +1,4 @@
-﻿nukeops-title = Ядерні оперативники
+nukeops-title = Ядерні оперативники
 nukeops-description = Оперативники націлилися на станцію. Спробуйте утримати їх від озброєння та детонації ядерної бомби, захистивши ядерний диск!
 
 nukeops-welcome =
@@ -23,6 +23,17 @@ nukeops-cond-nukiesabandoned = Оперативник були полишені.
 nukeops-cond-allnukiesdead = Всі оперативники померли
 nukeops-cond-somenukiesalive = Хтось з опертивників помер.
 nukeops-cond-allnukiesalive = Жоден з оперативників не помер.
+
+nukeops-disk-location-title = Кінцеве місцезнаходження диска:
+nukeops-disk-carried-by = {" "}у [color=White]{$name}[/color], [color=orange]{$job}[/color], {$location} { $user ->
+    [unknown] { "" }
+    *[other] ([color=gray]{$user}[/color])
+}
+
+storage-hierarchy-list = { $items-left ->
+    [0] { $existing-text } { $item },
+    *[other] { $existing-text } { $item }, в
+}
 
 nukeops-list-start = Оперативниками були:
 nukeops-list-name = - [color=White]{$name}[/color]

@@ -11,7 +11,6 @@ gas-analyzer-window-tab-title-capitalized = {CAPITALIZE($title)}
 gas-analyzer-window-refresh-button = Оновити
 gas-analyzer-window-no-data = Дані відсутні
 gas-analyzer-window-no-gas-text = Відсутність газів
-gas-analyzer-window-error-text = Помилка: {$errorText}
 gas-analyzer-window-volume-text = Об'єм:
 gas-analyzer-window-volume-val-text = {$volume} Л
 gas-analyzer-window-pressure-text = Тиск:

@@ -31,8 +31,12 @@ lathe-category-faux-tile = Імітація
 lathe-category-maints-tile = Обслуговування
 lathe-category-marble = Мармур
 lathe-category-steel-tile = Сталь
+lathe-category-shuttle-tile = Шатли
 lathe-category-white-tile = Світлі
 lathe-category-wood-tile = Дерево
+lathe-category-plastic-tile = Пластик
+lathe-category-precious-tile = Коштовні
+lathe-category-industrial-tile = Промислові
 
 # Science
 lathe-category-mechs = Мехи
