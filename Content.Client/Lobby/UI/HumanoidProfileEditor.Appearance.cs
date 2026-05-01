@@ -192,6 +192,7 @@ public sealed partial class HumanoidProfileEditor
         UpdateSpeciesGuidebookIcon();
         UpdateHeightControls(); //height and width may have different ranges for new species, make sure to update them.
         UpdateWidthControls();
+        UpdateWeight();
         ReloadPreview();
     }
 
@@ -318,6 +319,10 @@ public sealed partial class HumanoidProfileEditor
             var avg = (Profile.Appearance.Width + Profile.Appearance.Height) / 2;
             var weight = MathF.Round(MathF.PI * MathF.Pow(radius * avg, 2) * density);
             CWeightLabel.Text = Loc.GetString("humanoid-profile-editor-weight-label", ("weight", (int)weight));
+        }
+        else
+        {
+            CWeightLabel.Text = Loc.GetString("humanoid-profile-editor-weight-label", ("weight", 71));
         }
 
         SpriteView.InvalidateMeasure();
