@@ -2,6 +2,9 @@
   id: CrayonRainbow # ItemMapper: CrayonBox
   
 - type: Tag
+  id: MRSmallGrenade #для гранат для гіндара
+
+- type: Tag
   id: SichPoltergeistAbilities #для здібностей полтергейста
   
 - type: Tag
