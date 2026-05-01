@@ -40,6 +40,6 @@ public sealed class NewLifeEui : BaseEui
     {
         base.Closed();
 
-        _newLifeSystem.CloseEui(Player);
+        _newLifeSystem.OnEuiClosed(Player);
     }
 }

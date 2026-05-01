@@ -89,6 +89,12 @@ public sealed class NewLifeSystem : EntitySystem
 
         eui?.Close();
     }
+
+    public void OnEuiClosed(ICommonSession session)
+    {
+        _openUis.Remove(session);
+    }
+
     public void UpdateAllEui()
     {
         foreach (var eui in _openUis.Values)
