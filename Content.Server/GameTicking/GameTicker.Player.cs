@@ -214,6 +214,7 @@ namespace Content.Server.GameTicking
             }
 
             RaiseNetworkEvent(new TickerJoinGameEvent(), session.Channel);
+            RaiseLocalEvent(new PlayerJoinedGameEvent(session));
         }
 
         private void PlayerJoinLobby(ICommonSession session)
@@ -239,6 +240,16 @@ namespace Content.Server.GameTicking
         public readonly ICommonSession PlayerSession;
 
         public PlayerJoinedLobbyEvent(ICommonSession playerSession)
+        {
+            PlayerSession = playerSession;
+        }
+    }
+
+    public sealed class PlayerJoinedGameEvent : EntityEventArgs
+    {
+        public readonly ICommonSession PlayerSession;
+
+        public PlayerJoinedGameEvent(ICommonSession playerSession)
         {
             PlayerSession = playerSession;
         }
