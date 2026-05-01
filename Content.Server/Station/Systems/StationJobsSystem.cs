@@ -36,6 +36,7 @@ public sealed partial class StationJobsSystem : EntitySystem
         SubscribeLocalEvent<StationJobsComponent, StationRenamedEvent>(OnStationRenamed);
         SubscribeLocalEvent<StationJobsComponent, ComponentShutdown>(OnStationDeletion);
         SubscribeLocalEvent<PlayerJoinedLobbyEvent>(OnPlayerJoinedLobby);
+        SubscribeLocalEvent<PlayerJoinedGameEvent>(OnPlayerJoinedGame);
         Subs.CVar(_configurationManager, CCVars.GameDisallowLateJoins, _ => UpdateJobsAvailable(), true);
     }
 
@@ -514,6 +515,11 @@ public sealed partial class StationJobsSystem : EntitySystem
     }
 
     private void OnPlayerJoinedLobby(PlayerJoinedLobbyEvent ev)
+    {
+        RaiseNetworkEvent(_cachedAvailableJobs, ev.PlayerSession.Channel);
+    }
+
+    private void OnPlayerJoinedGame(PlayerJoinedGameEvent ev)
     {
         RaiseNetworkEvent(_cachedAvailableJobs, ev.PlayerSession.Channel);
     }
