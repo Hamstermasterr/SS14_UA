@@ -9,8 +9,8 @@ using Robust.Server.Player;
 using Robust.Shared.Network;
 using System.Linq;
 using System.Threading.Tasks;
-using DbSponsorRank = Content.Server.Database.SponsorRank; // Використовуємо твою назву таблиці
-using static Content.Shared.Sich.Sponsors.AdminSponsorsEuiMsg; // Змінено на AdminSponsorsEuiMsg
+using DbSponsorRank = Content.Server.Database.SponsorRank;
+using static Content.Shared.Sich.Sponsors.AdminSponsorsEuiMsg;
 
 namespace Content.Server.Sich.Sponsors.UI;
 
@@ -73,10 +73,8 @@ public sealed class AdminSponsorsEui : BaseEui
                 UserId = new NetUserId(p.a.UserId),
                 UserName = p.lastUserName,
 
-                // ОНОВЛЕННЯ: Тепер передаємо список рангів, а не один ID
                 RankIds = p.a.RoleAssignments?.Select(ra => ra.RankId).ToList() ?? new List<int>(),
 
-                // ОНОВЛЕННЯ: Передаємо персональні налаштування кольорів
                 SelectedGhostColor = p.a.SelectedGhostColor,
                 SelectedOocColor = p.a.SelectedOocColor,
                 SelectedGhostRankId = p.a.SelectedGhostRankId,
@@ -86,9 +84,8 @@ public sealed class AdminSponsorsEui : BaseEui
             SponsorRanks = _sponsorRanks.ToDictionary(a => a.Id, a => new AdminSponsorsEuiState.SponsorRankData
             {
                 Name = a.Name,
-                DefaultColor = Color.FromHex(a.DefaultColor), // Використовуємо DefaultColor з моделі
+                DefaultColor = Color.FromHex(a.DefaultColor),
 
-                // ОНОВЛЕННЯ: Нові поля
                 DefaultGhostColor = a.DefaultGhostColor,
                 DefaultOocColor = a.DefaultOocColor,
                 CanSetGhostColor = a.CanSetGhostColor,
@@ -103,8 +100,6 @@ public sealed class AdminSponsorsEui : BaseEui
     public override async void HandleMessage(EuiMessageBase msg)
     {
         base.HandleMessage(msg);
-
-        // Перевіряємо права адміністратора перед будь-якими змінами
         if (!UserAdminFlagCheck(AdminFlags.Permissions))
             return;
 
@@ -152,7 +147,6 @@ public sealed class AdminSponsorsEui : BaseEui
         var rank = await _db.GetSponsorRankAsync(ur.Id);
         if (rank == null) return;
 
-        // ОНОВЛЕННЯ: Мапимо всі нові поля
         rank.Name = ur.Name;
         rank.DefaultColor = ur.DefaultColor.ToHex();
         rank.DefaultGhostColor = ur.DefaultGhostColor;
@@ -162,7 +156,6 @@ public sealed class AdminSponsorsEui : BaseEui
         rank.ShowInSponsorWindow = ur.ShowInSponsorWindow;
         rank.Priority = ur.Priority;
 
-        // Перетворюємо список рядків (Tags) у список об'єктів (RankTag)
         rank.Tags = ur.Tags.Select(t => new RankTag { SponsorRankId = rank.Id, TagValue = t }).ToList();
 
         await _db.UpdateSponsorRankAsync(rank);
@@ -185,8 +178,6 @@ public sealed class AdminSponsorsEui : BaseEui
             Priority = ar.Priority,
         };
 
-        // Теги додамо після збереження рангу (бо нам потрібен його згенерований Id),
-        // або Entity Framework зробить це автоматично, якщо ми прив'яжемо їх так:
         rank.Tags = ar.Tags.Select(t => new RankTag { TagValue = t }).ToList();
 
         await _db.AddSponsorRankAsync(rank);
@@ -205,7 +196,7 @@ public sealed class AdminSponsorsEui : BaseEui
         var record = await _db.GetPlayerRecordByUserId(ra.UserId);
         _sawmill.Info($"{Player} removed sponsor {record?.LastSeenUserName ?? ra.UserId.ToString()}");
 
-        await _sichSponsorManager.ReloadSponsorAsync(ra.UserId); // Використовуємо новий метод з менеджера!
+        await _sichSponsorManager.ReloadSponsorAsync(ra.UserId);
     }
 
     private async Task HandleUpdateSponsor(UpdateSponsor ua)
@@ -213,14 +204,12 @@ public sealed class AdminSponsorsEui : BaseEui
         var sponsor = await _db.GetSponsorDataForAsync(ua.UserId);
         if (sponsor == null) return;
 
-        // ОНОВЛЕННЯ: Мапимо список рангів замість одного
         sponsor.RoleAssignments = ua.RankIds.Select(rankId => new SponsorRoleAssignment
         {
             UserId = sponsor.UserId,
             RankId = rankId
         }).ToList();
 
-        // Оновлюємо персональні налаштування (адмін може їх скинути або змінити)
         sponsor.SelectedGhostColor = ua.SelectedGhostColor;
         sponsor.SelectedOocColor = ua.SelectedOocColor;
         sponsor.SelectedGhostRankId = ua.SelectedGhostRankId;
@@ -233,7 +222,7 @@ public sealed class AdminSponsorsEui : BaseEui
 
         _sawmill.Info($"{Player} updated sponsor {name} with {ua.RankIds.Count} ranks");
 
-        await _sichSponsorManager.ReloadSponsorAsync(ua.UserId); // Використовуємо новий точковий релоад
+        await _sichSponsorManager.ReloadSponsorAsync(ua.UserId);
     }
 
     private async Task HandleCreateSponsor(AddSponsor ca)
@@ -259,12 +248,11 @@ public sealed class AdminSponsorsEui : BaseEui
         }
 
         var existing = await _db.GetSponsorDataForAsync(userId);
-        if (existing != null) return; // Already exists
+        if (existing != null) return;
 
         var sponsor = new SichSponsor
         {
             UserId = userId.UserId,
-            // Створюємо RoleAssignments зі списку RankIds
             RoleAssignments = ca.RankIds.Select(rankId => new SponsorRoleAssignment
             {
                 UserId = userId.UserId,
