@@ -12,9 +12,4 @@ public sealed partial class SichSponsorSystem : EntitySystem
     {
         base.Initialize();
     }
-
-    public void RequestSponsorWindow()
-    {
-        RaiseNetworkEvent(new RequestSponsorWindowMessage());
-    }
 }
