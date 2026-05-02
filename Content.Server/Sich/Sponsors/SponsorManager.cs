@@ -31,7 +31,7 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
 
     public void Init()
     {
-        _netManager.RegisterNetMessage<MsgPreferencesAndSettings>();
+        _netManager.RegisterNetMessage<MsgSponsorInfo>();
         _sawmill = _log.GetSawmill("sponsorPrefs");
     }
 
@@ -118,6 +118,8 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
 
     void IPostInjectInit.PostInject()
     {
+        Init();
+
         _userDb.AddOnLoadPlayer(LoadData);
         _userDb.AddOnFinishLoad(FinishLoad);
         _userDb.AddOnPlayerDisconnect(OnClientDisconnected);
@@ -242,6 +244,7 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
                 continue;
 
             await LoadData(session);
+            SyncTags(session);
         }
     }
 

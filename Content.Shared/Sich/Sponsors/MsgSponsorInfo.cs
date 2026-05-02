@@ -5,7 +5,6 @@ using Robust.Shared.Serialization;
 
 namespace Content.Shared.Sich.Sponsors;
 
-[Serializable, NetSerializable]
 public sealed class MsgSponsorInfo : NetMessage
 {
     public override MsgGroups MsgGroup => MsgGroups.Command;
