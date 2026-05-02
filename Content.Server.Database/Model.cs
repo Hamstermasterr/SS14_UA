@@ -57,6 +57,18 @@ namespace Content.Server.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SichSponsor>()
+                .HasOne(s => s.SelectedGhostRank)
+                .WithMany()
+                .HasForeignKey(s => s.SelectedGhostRankId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<SichSponsor>()
+                .HasOne(s => s.SelectedOocRank)
+                .WithMany()
+                .HasForeignKey(s => s.SelectedOocRankId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             modelBuilder.Entity<SponsorRoleAssignment>()
                 .HasKey(sra => new { sra.UserId, sra.RankId });
 
@@ -330,6 +342,13 @@ namespace Content.Server.Database
         public Guid UserId { get; set; }
         public string? SelectedGhostColor { get; set; }
         public string? SelectedOocColor { get; set; }
+
+        public int? SelectedGhostRankId { get; set; }
+        public SponsorRank? SelectedGhostRank { get; set; }
+
+        public int? SelectedOocRankId { get; set; }
+        public SponsorRank? SelectedOocRank { get; set; }
+
         public List<SponsorRoleAssignment> RoleAssignments { get; set; } = new();
     }
 
@@ -348,8 +367,15 @@ namespace Content.Server.Database
         public string Name { get; set; } = default!;
         public string DefaultColor { get; set; } = "#FFFFFF";
 
+        public string? DefaultGhostColor { get; set; }
+        public string? DefaultOocColor { get; set; }
+
         public bool CanSetGhostColor { get; set; }
         public bool CanSetOocColor { get; set; }
+
+        public bool ShowInSponsorWindow { get; set; } = true;
+        public int Priority { get; set; } = 0;
+
         public List<SponsorRoleAssignment> RoleAssignments { get; set; } = new();
         public List<RankTag> Tags { get; set; } = new();
     }

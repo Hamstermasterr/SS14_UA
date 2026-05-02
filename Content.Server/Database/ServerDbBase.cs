@@ -41,11 +41,12 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            // Отримуємо спонсорів разом із їхніми ролями
-            var preferences = await db.DbContext.SichSponsors // або SichSponsor, залежить від назви твого DbSet
+            var preferences = await db.DbContext.SichSponsors
                 .Include(p => p.RoleAssignments)
                     .ThenInclude(ra => ra.Rank)
-                .AsSplitQuery() // Залишаємо це, щоб уникнути ворнінгів та оптимізувати запити
+                .Include(p => p.SelectedGhostRank)
+                .Include(p => p.SelectedOocRank)
+                .AsSplitQuery()
                 .ToArrayAsync(cancel);
 
             var userIds = preferences.Select(p => p.UserId).Distinct().ToList();
@@ -105,7 +106,7 @@ namespace Content.Server.Database
             await using var db = await GetDb(cancel);
 
             var existing = await db.DbContext.SponsorRanks
-                .Include(r => r.Tags) // Треба завантажити поточні теги для оновлення
+                .Include(r => r.Tags)
                 .SingleAsync(a => a.Id == rank.Id, cancel);
 
             // Оновлюємо базові поля
@@ -114,7 +115,13 @@ namespace Content.Server.Database
             existing.CanSetGhostColor = rank.CanSetGhostColor;
             existing.CanSetOocColor = rank.CanSetOocColor;
 
-            // Оновлюємо теги: найпростіший шлях - видалити старі та записати нові
+            // --- ДОДАНО НОВІ ПОЛЯ ---
+            existing.DefaultGhostColor = rank.DefaultGhostColor;
+            existing.DefaultOocColor = rank.DefaultOocColor;
+            existing.ShowInSponsorWindow = rank.ShowInSponsorWindow;
+            existing.Priority = rank.Priority;
+
+            // Оновлюємо теги
             db.DbContext.RankTags.RemoveRange(existing.Tags);
 
             var newTags = rank.Tags.Select(t => new RankTag { SponsorRankId = existing.Id, TagValue = t.TagValue }).ToList();
@@ -130,7 +137,10 @@ namespace Content.Server.Database
             return await db.DbContext.SichSponsors
                 .Include(p => p.RoleAssignments)
                     .ThenInclude(ra => ra.Rank)
-                        .ThenInclude(r => r.Tags) // Дістаємо всю ієрархію для перевірки бонусів
+                        .ThenInclude(r => r.Tags)
+                // --- ПІДТЯГУЄМО ОБРАНІ РАНГИ ---
+                .Include(p => p.SelectedGhostRank)
+                .Include(p => p.SelectedOocRank)
                 .AsSplitQuery()
                 .SingleOrDefaultAsync(p => p.UserId == userId.UserId, cancel);
         }
@@ -159,14 +169,18 @@ namespace Content.Server.Database
             await using var db = await GetDb(cancel);
 
             var existing = await db.DbContext.SichSponsors
-                .Include(s => s.RoleAssignments) // Завантажуємо поточні ролі
+                .Include(s => s.RoleAssignments)
                 .SingleAsync(a => a.UserId == sponsor.UserId, cancel);
 
             // Оновлюємо персональні налаштування кольорів
             existing.SelectedGhostColor = sponsor.SelectedGhostColor;
             existing.SelectedOocColor = sponsor.SelectedOocColor;
 
-            // Оновлюємо ролі (якщо адміністратор змінив їх через панель)
+            // --- ДОДАНО НОВІ ПОЛЯ ---
+            existing.SelectedGhostRankId = sponsor.SelectedGhostRankId;
+            existing.SelectedOocRankId = sponsor.SelectedOocRankId;
+
+            // Оновлюємо ролі
             db.DbContext.SponsorRoleAssignments.RemoveRange(existing.RoleAssignments);
 
             var newRoles = sponsor.RoleAssignments.Select(ra => new SponsorRoleAssignment
