@@ -292,9 +292,10 @@ internal sealed partial class ChatManager : IChatManager
 
         if(_sichSponsorManager.TryGetCachedSponsor(player.UserId, out var sponsor))
         {
-            if(sponsor.SponsorRank != null)
+            var oocColor = _sichSponsorManager.GetOocColor(player.UserId);
+            if (oocColor != null)
             {
-                colorOverride = Color.FromHex(sponsor.SponsorRank.Color);
+                colorOverride = Color.FromHex(oocColor);
             }
         }
 
