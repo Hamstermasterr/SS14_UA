@@ -1,4 +1,5 @@
 using Content.Server.Database;
+using Content.Server.Preferences.Managers;
 using Content.Shared.Preferences;
 using Content.Shared.Sich.Sponsors;
 using Robust.Server.Player;
@@ -23,6 +24,7 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
     [Dependency] private readonly IServerDbManager _db = default!;
     [Dependency] private readonly ILogManager _log = default!;
     [Dependency] private readonly UserDbDataManager _userDb = default!;
+    [Dependency] private readonly IServerPreferencesManager _prefsManager = default!;
 
     // Cache player prefs on the server so we don't need as much async hell related to them.
     private readonly Dictionary<NetUserId, PlayerSponsorData> _cachedPlayerPrefs = new();
@@ -265,6 +267,7 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
         }
 
         SyncTags(session);
+        _prefsManager.RefreshPreferences(userId);
     }
 
     public void UpdateCache(NetUserId userId, SichSponsor updatedSponsor)
@@ -281,6 +284,7 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
         if (_playerManager.TryGetSessionById(userId, out var session))
         {
             SyncTags(session);
+            _prefsManager.RefreshPreferences(userId);
         }
     }
 

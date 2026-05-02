@@ -53,8 +53,9 @@ public sealed class StationSpawningSystem : SharedStationSpawningSystem
             return true;
 
         if (!TryComp<ActorComponent>(entity, out var actor))
+        {
             return true;
-
+        }
         return _sponsorManager.HasTag(actor.PlayerSession.UserId, proto.SponsorTag);
     }
 
