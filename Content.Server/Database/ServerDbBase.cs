@@ -37,14 +37,17 @@ namespace Content.Server.Database
         }
 
         public async Task<((SichSponsor sponsor, string? lastUserName)[] sponsors, SponsorRank[] ranks)>
-            GetAllSichSponsorsAsync(CancellationToken cancel)
+     GetAllSichSponsorsAsync(CancellationToken cancel)
         {
             await using var db = await GetDb(cancel);
 
-            var preferences = await db.DbContext.SichSponsor
+            // Отримуємо спонсорів разом із їхніми ролями
+            var preferences = await db.DbContext.SichSponsors // або SichSponsor, залежить від назви твого DbSet
+                .Include(p => p.RoleAssignments)
+                    .ThenInclude(ra => ra.Rank)
+                .AsSplitQuery() // Залишаємо це, щоб уникнути ворнінгів та оптимізувати запити
                 .ToArrayAsync(cancel);
 
-            // Отримуємо відповідні імена користувачів
             var userIds = preferences.Select(p => p.UserId).Distinct().ToList();
 
             var userNames = await db.DbContext.Player
@@ -52,15 +55,16 @@ namespace Content.Server.Database
                 .Select(p => new { p.UserId, p.LastSeenUserName })
                 .ToArrayAsync(cancel);
 
-            // Створюємо словник UserId -> LastSeenUserName
             var nameDict = userNames.ToDictionary(x => x.UserId, x => x.LastSeenUserName);
 
-            // Створюємо масив кортежів (SichSponsor, string?)
             var preferenceTuples = preferences
                 .Select(p => (p, nameDict.TryGetValue(p.UserId, out var name) ? name : null))
                 .ToArray();
 
-            var sponsorRanks = await db.DbContext.SponsorRank
+            // Отримуємо всі ранги разом із їхніми тегами
+            var sponsorRanks = await db.DbContext.SponsorRanks
+                .Include(r => r.Tags)
+                .AsSplitQuery()
                 .ToArrayAsync(cancel);
 
             return (preferenceTuples, sponsorRanks);
@@ -70,7 +74,8 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            return await db.DbContext.SponsorRank
+            return await db.DbContext.SponsorRanks
+                .Include(r => r.Tags) // Обов'язково підтягуємо теги
                 .SingleOrDefaultAsync(r => r.Id == id, cancel);
         }
 
@@ -78,9 +83,11 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            var admin = await db.DbContext.SponsorRank.SingleAsync(a => a.Id == rankId, cancel);
-            db.DbContext.SponsorRank.Remove(admin);
+            var rank = await db.DbContext.SponsorRanks.SingleAsync(a => a.Id == rankId, cancel);
+            db.DbContext.SponsorRanks.Remove(rank);
 
+            // EF Core автоматично видалить пов'язані RankTag та SponsorRoleAssignment (Cascade Delete),
+            // якщо це правильно налаштовано в міграції.
             await db.DbContext.SaveChangesAsync(cancel);
         }
 
@@ -88,7 +95,7 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            db.DbContext.SponsorRank.Add(rank);
+            db.DbContext.SponsorRanks.Add(rank);
 
             await db.DbContext.SaveChangesAsync(cancel);
         }
@@ -97,11 +104,21 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            var existing = await db.DbContext.SponsorRank
+            var existing = await db.DbContext.SponsorRanks
+                .Include(r => r.Tags) // Треба завантажити поточні теги для оновлення
                 .SingleAsync(a => a.Id == rank.Id, cancel);
 
+            // Оновлюємо базові поля
             existing.Name = rank.Name;
-            existing.Color = rank.Color;
+            existing.DefaultColor = rank.DefaultColor;
+            existing.CanSetGhostColor = rank.CanSetGhostColor;
+            existing.CanSetOocColor = rank.CanSetOocColor;
+
+            // Оновлюємо теги: найпростіший шлях - видалити старі та записати нові
+            db.DbContext.RankTags.RemoveRange(existing.Tags);
+
+            var newTags = rank.Tags.Select(t => new RankTag { SponsorRankId = existing.Id, TagValue = t.TagValue }).ToList();
+            existing.Tags = newTags;
 
             await db.DbContext.SaveChangesAsync(cancel);
         }
@@ -110,9 +127,11 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            return await db.DbContext.SichSponsor
-                .Include(p => p.SponsorRank)
-                .AsSplitQuery() // tests fail because of a random warning if you dont have this!
+            return await db.DbContext.SichSponsors
+                .Include(p => p.RoleAssignments)
+                    .ThenInclude(ra => ra.Rank)
+                        .ThenInclude(r => r.Tags) // Дістаємо всю ієрархію для перевірки бонусів
+                .AsSplitQuery()
                 .SingleOrDefaultAsync(p => p.UserId == userId.UserId, cancel);
         }
 
@@ -120,8 +139,8 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            var sponsor = await db.DbContext.SichSponsor.SingleAsync(a => a.UserId == userId.UserId, cancel);
-            db.DbContext.SichSponsor.Remove(sponsor);
+            var sponsor = await db.DbContext.SichSponsors.SingleAsync(a => a.UserId == userId.UserId, cancel);
+            db.DbContext.SichSponsors.Remove(sponsor);
 
             await db.DbContext.SaveChangesAsync(cancel);
         }
@@ -130,7 +149,7 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            db.DbContext.SichSponsor.Add(sponsor);
+            db.DbContext.SichSponsors.Add(sponsor);
 
             await db.DbContext.SaveChangesAsync(cancel);
         }
@@ -139,8 +158,24 @@ namespace Content.Server.Database
         {
             await using var db = await GetDb(cancel);
 
-            var existing = await db.DbContext.SichSponsor.SingleAsync(a => a.UserId == sponsor.UserId, cancel);
-            existing.SponsorRankId = sponsor.SponsorRankId;
+            var existing = await db.DbContext.SichSponsors
+                .Include(s => s.RoleAssignments) // Завантажуємо поточні ролі
+                .SingleAsync(a => a.UserId == sponsor.UserId, cancel);
+
+            // Оновлюємо персональні налаштування кольорів
+            existing.SelectedGhostColor = sponsor.SelectedGhostColor;
+            existing.SelectedOocColor = sponsor.SelectedOocColor;
+
+            // Оновлюємо ролі (якщо адміністратор змінив їх через панель)
+            db.DbContext.SponsorRoleAssignments.RemoveRange(existing.RoleAssignments);
+
+            var newRoles = sponsor.RoleAssignments.Select(ra => new SponsorRoleAssignment
+            {
+                UserId = existing.UserId,
+                RankId = ra.RankId
+            }).ToList();
+
+            existing.RoleAssignments = newRoles;
 
             await db.DbContext.SaveChangesAsync(cancel);
         }

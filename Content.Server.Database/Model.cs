@@ -50,9 +50,9 @@ namespace Content.Server.Database
         public DbSet<BanTemplate> BanTemplate { get; set; } = null!;
         public DbSet<IPIntelCache> IPIntelCache { get; set; } = null!;
 
-        public DbSet<SichSponsor> SichSponsor { get; set; } = null!;
-        public DbSet<SponsorRank> SponsorRank { get; set; } = null!;
-        public DbSet<RankTag> RankTag { get; set; } = null!;
+        public DbSet<SichSponsor> SichSponsors { get; set; } = null!;
+        public DbSet<SponsorRank> SponsorRanks { get; set; } = null!;
+        public DbSet<RankTag> RankTags { get; set; } = null!;
         public DbSet<SponsorRoleAssignment> SponsorRoleAssignments { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
