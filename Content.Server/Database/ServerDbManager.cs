@@ -437,6 +437,8 @@ namespace Content.Server.Database
             _db.Shutdown();
         }
 
+        #region MRSponsors
+
         public Task<((SichSponsor sponsor, string? lastUserName)[] sponsors, SponsorRank[] ranks)>
             GetAllSichSponsorsAsync(CancellationToken cancel)
         {
@@ -491,6 +493,7 @@ namespace Content.Server.Database
             DbWriteOpsMetric.Inc();
             return RunDbCommand(() => _db.UpdateSponsorAsync(sponsor, cancel));
         }
+        #endregion
 
         public Task<Preference> InitPrefsAsync(
             NetUserId userId,

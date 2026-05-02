@@ -81,7 +81,7 @@ internal static class ServerContentIoC
         deps.Register<CVarControlManager>();
         deps.Register<DiscordLink>();
         deps.Register<DiscordChatLink>();
-        deps.Register<ISichSponsorManager, SichSponsorManager>();
+        deps.Register<ISponsorManager, SponsorManager>();
         deps.Register<ServerFeedbackManager>();
         deps.Register<ISharedFeedbackManager, ServerFeedbackManager>();
     }

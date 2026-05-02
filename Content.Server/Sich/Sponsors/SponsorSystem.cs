@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Content.Server.Sich.Sponsors;
-public sealed partial class SichSponsorSystem : EntitySystem
+public sealed partial class SponsorSystem : EntitySystem
 {
     [Dependency] private readonly EuiManager _euiManager = default!;
 

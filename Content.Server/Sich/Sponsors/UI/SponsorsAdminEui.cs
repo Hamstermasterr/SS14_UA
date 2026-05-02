@@ -18,7 +18,7 @@ public sealed class SponsorsAdminEui : BaseEui
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IServerDbManager _db = default!;
     [Dependency] private readonly IAdminManager _adminManager = default!;
-    [Dependency] private readonly ISichSponsorManager _sichSponsorManager = default!;
+    [Dependency] private readonly ISponsorManager _sichSponsorManager = default!;
     [Dependency] private readonly ILogManager _logManager = default!;
 
     private readonly ISawmill _sawmill;

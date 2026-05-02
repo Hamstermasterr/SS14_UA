@@ -51,7 +51,7 @@ internal sealed partial class ChatManager : IChatManager
 
     private ISawmill _sawmill = default!;
 
-    [Dependency] private readonly ISichSponsorManager _sichSponsorManager = default!;
+    [Dependency] private readonly ISponsorManager _sichSponsorManager = default!;
 
     /// <summary>
     /// The maximum length a player-sent message can be sent
