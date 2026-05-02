@@ -45,11 +45,19 @@ public abstract class SharedStationSpawningSystem : EntitySystem
                     continue;
                 }
 
+                if (!IsLoadoutAllowed(entity, loadoutProto))
+                    continue;
+
                 EquipStartingGear(entity, loadoutProto, raiseEvent: false);
             }
         }
 
         EquipRoleName(entity, loadout, roleProto);
+    }
+
+    protected virtual bool IsLoadoutAllowed(EntityUid entity, LoadoutPrototype proto)
+    {
+        return true; // За замовчуванням дозволяємо все
     }
 
     /// <summary>

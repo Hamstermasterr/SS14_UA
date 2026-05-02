@@ -19,6 +19,7 @@ using Content.Client.Playtime;
 using Content.Client.Radiation.Overlays;
 using Content.Client.Replay;
 using Content.Client.Screenshot;
+using Content.Client.Sich.Sponsors;
 using Content.Client.Singularity;
 using Content.Client.Stylesheets;
 using Content.Client.UserInterface;
@@ -79,6 +80,8 @@ namespace Content.Client.Entry
         [Dependency] private readonly IEntitySystemManager _entitySystemManager = default!;
         [Dependency] private readonly ClientsidePlaytimeTrackingManager _clientsidePlaytimeManager = default!;
         [Dependency] private readonly ClientFeedbackManager _feedbackManager = null!;
+
+        [Dependency] private readonly IClientSponsorManager _sponsorManager = default!;
 
         public override void PreInit()
         {
@@ -142,6 +145,7 @@ namespace Content.Client.Entry
             _jobRequirements.Initialize();
             _playbackMan.Initialize();
             _clientsidePlaytimeManager.Initialize();
+            _sponsorManager.Initialize();
 
             //AUTOSCALING default Setup!
             _configManager.SetCVar("interface.resolutionAutoScaleUpperCutoffX", 1080);

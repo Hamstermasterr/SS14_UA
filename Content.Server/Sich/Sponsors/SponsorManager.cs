@@ -1,5 +1,6 @@
 using Content.Server.Database;
 using Content.Shared.Preferences;
+using Content.Shared.Sich.Sponsors;
 using Robust.Server.Player;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
@@ -72,6 +73,26 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
     {
         var sponsData = _cachedPlayerPrefs[session.UserId];
         sponsData.SponsorLoaded = true;
+
+        SyncTags(session);
+    }
+
+    private void SyncTags(ICommonSession session)
+    {
+        if (!_cachedPlayerPrefs.TryGetValue(session.UserId, out var data) || data.Sponsor == null)
+            return;
+
+        var sponsor = data.Sponsor;
+        var msg = new MsgSponsorInfo();
+
+        // Збираємо унікальні теги з усіх призначених ролей
+        msg.Tags = sponsor.RoleAssignments
+            .Where(ra => ra.Rank != null)
+            .SelectMany(ra => ra.Rank!.Tags.Select(t => t.TagValue))
+            .Distinct()
+            .ToList();
+
+        _netManager.ServerSendMessage(msg, session.Channel);
     }
 
     public void OnClientDisconnected(ICommonSession session)
@@ -226,8 +247,7 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
 
     public async Task ReloadSponsorAsync(NetUserId userId, CancellationToken cancel = default)
     {
-        // Не вантажимо з БД, якщо гравця немає на сервері
-        if (!_playerManager.TryGetSessionById(userId, out _))
+        if (!_playerManager.TryGetSessionById(userId, out var session))
             return;
 
         var spons = await GetOrCreateSponsorAsync(userId, cancel);
@@ -240,6 +260,8 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
         {
             _cachedPlayerPrefs[userId] = new PlayerSponsorData { SponsorLoaded = true, Sponsor = spons };
         }
+
+        SyncTags(session);
     }
 
     public void UpdateCache(NetUserId userId, SichSponsor updatedSponsor)
@@ -251,6 +273,11 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
         else
         {
             _cachedPlayerPrefs[userId] = new PlayerSponsorData { SponsorLoaded = true, Sponsor = updatedSponsor };
+        }
+
+        if (_playerManager.TryGetSessionById(userId, out var session))
+        {
+            SyncTags(session);
         }
     }
 

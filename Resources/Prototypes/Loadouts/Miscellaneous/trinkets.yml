@@ -138,6 +138,7 @@
     back:
     - ClothingNeckLGBTPin
   groupBy: "pin"
+  sponsorTag: "loadout_lgbt"
 
 - type: loadout
   id: ClothingNeckAllyPin
