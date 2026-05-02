@@ -9,11 +9,12 @@ using Robust.Server.Player;
 using Robust.Shared.Network;
 using System.Linq;
 using System.Threading.Tasks;
-using DbSponsorRank = Content.Server.Database.SponsorRank;
-using static Content.Shared.Sich.Sponsors.SponsorsEuiMsg;
+using DbSponsorRank = Content.Server.Database.SponsorRank; // Використовуємо твою назву таблиці
+using static Content.Shared.Sich.Sponsors.AdminSponsorsEuiMsg; // Змінено на AdminSponsorsEuiMsg
 
 namespace Content.Server.Sich.Sponsors.UI;
-public sealed class SponsorsAdminEui : BaseEui
+
+public sealed class AdminSponsorsEui : BaseEui
 {
     [Dependency] private readonly IPlayerManager _playerManager = default!;
     [Dependency] private readonly IServerDbManager _db = default!;
@@ -24,10 +25,10 @@ public sealed class SponsorsAdminEui : BaseEui
     private readonly ISawmill _sawmill;
     private bool _isLoading;
 
-    private readonly List<(SichSponsor a, string? lastUserName)> _sponsors = new List<(SichSponsor, string? lastUserName)>();
+    private readonly List<(SichSponsor a, string? lastUserName)> _sponsors = new();
     private readonly List<DbSponsorRank> _sponsorRanks = new();
 
-    public SponsorsAdminEui()
+    public AdminSponsorsEui()
     {
         IoCManager.InjectDependencies(this);
         _sawmill = _logManager.GetSawmill("sponsors.perms");
@@ -62,25 +63,39 @@ public sealed class SponsorsAdminEui : BaseEui
     {
         if (_isLoading)
         {
-            return new SponsorsEuiState
-            {
-                IsLoading = true
-            };
+            return new AdminSponsorsEuiState { IsLoading = true };
         }
 
-        return new SponsorsEuiState
+        return new AdminSponsorsEuiState
         {
-            Sponsors = _sponsors.Select(p => new SponsorsEuiState.SponsorData
+            Sponsors = _sponsors.Select(p => new AdminSponsorsEuiState.SponsorData
             {
-                RankId = p.a.SponsorRankId,
                 UserId = new NetUserId(p.a.UserId),
                 UserName = p.lastUserName,
+
+                // ОНОВЛЕННЯ: Тепер передаємо список рангів, а не один ID
+                RankIds = p.a.RoleAssignments?.Select(ra => ra.RankId).ToList() ?? new List<int>(),
+
+                // ОНОВЛЕННЯ: Передаємо персональні налаштування кольорів
+                SelectedGhostColor = p.a.SelectedGhostColor,
+                SelectedOocColor = p.a.SelectedOocColor,
+                SelectedGhostRankId = p.a.SelectedGhostRankId,
+                SelectedOocRankId = p.a.SelectedOocRankId
             }).ToArray(),
 
-            SponsorRanks = _sponsorRanks.ToDictionary(a => a.Id, a => new SponsorsEuiState.SponsorRankData
+            SponsorRanks = _sponsorRanks.ToDictionary(a => a.Id, a => new AdminSponsorsEuiState.SponsorRankData
             {
                 Name = a.Name,
-                Color = Color.FromHex(a.Color)
+                DefaultColor = Color.FromHex(a.DefaultColor), // Використовуємо DefaultColor з моделі
+
+                // ОНОВЛЕННЯ: Нові поля
+                DefaultGhostColor = a.DefaultGhostColor,
+                DefaultOocColor = a.DefaultOocColor,
+                CanSetGhostColor = a.CanSetGhostColor,
+                CanSetOocColor = a.CanSetOocColor,
+                ShowInSponsorWindow = a.ShowInSponsorWindow,
+                Priority = a.Priority,
+                Tags = a.Tags?.Select(t => t.TagValue).ToList() ?? new List<string>()
             })
         };
     }
@@ -89,43 +104,30 @@ public sealed class SponsorsAdminEui : BaseEui
     {
         base.HandleMessage(msg);
 
+        // Перевіряємо права адміністратора перед будь-якими змінами
+        if (!UserAdminFlagCheck(AdminFlags.Permissions))
+            return;
+
         switch (msg)
         {
             case AddSponsor ca:
-                {
-                    await HandleCreateSponsor(ca);
-                    break;
-                }
-
+                await HandleCreateSponsor(ca);
+                break;
             case UpdateSponsor ua:
-                {
-                    await HandleUpdateSponsor(ua);
-                    break;
-                }
-
+                await HandleUpdateSponsor(ua);
+                break;
             case RemoveSponsor ra:
-                {
-                    await HandleRemoveSponsor(ra);
-                    break;
-                }
-
+                await HandleRemoveSponsor(ra);
+                break;
             case AddSponsorRank ar:
-                {
-                    await HandleAddSponsorRank(ar);
-                    break;
-                }
-
+                await HandleAddSponsorRank(ar);
+                break;
             case UpdateSponsorRank ur:
-                {
-                    await HandleUpdateSponsorRank(ur);
-                    break;
-                }
-
+                await HandleUpdateSponsorRank(ur);
+                break;
             case RemoveSponsorRank ra:
-                {
-                    await HandleRemoveSponsorRank(ra);
-                    break;
-                }
+                await HandleRemoveSponsorRank(ra);
+                break;
         }
 
         if (!IsShutDown)
@@ -137,33 +139,35 @@ public sealed class SponsorsAdminEui : BaseEui
     private async Task HandleRemoveSponsorRank(RemoveSponsorRank rr)
     {
         var rank = await _db.GetSponsorRankAsync(rr.Id);
-        if (rank == null)
-        {
-            return;
-        }
+        if (rank == null) return;
 
         await _db.RemoveSponsorRankAsync(rr.Id);
+        _sawmill.Info($"{Player} removed sponsor rank {rank.Name}.");
 
-        //_adminManager.ReloadAdminsWithRank(rr.Id);
         await _sichSponsorManager.ReloadSponsorsAsync();
     }
 
     private async Task HandleUpdateSponsorRank(UpdateSponsorRank ur)
     {
         var rank = await _db.GetSponsorRankAsync(ur.Id);
-        if (rank == null)
-        {
-            return;
-        }
+        if (rank == null) return;
 
+        // ОНОВЛЕННЯ: Мапимо всі нові поля
         rank.Name = ur.Name;
-        rank.Color = ur.Color.ToHex();
+        rank.DefaultColor = ur.DefaultColor.ToHex();
+        rank.DefaultGhostColor = ur.DefaultGhostColor;
+        rank.DefaultOocColor = ur.DefaultOocColor;
+        rank.CanSetGhostColor = ur.CanSetGhostColor;
+        rank.CanSetOocColor = ur.CanSetOocColor;
+        rank.ShowInSponsorWindow = ur.ShowInSponsorWindow;
+        rank.Priority = ur.Priority;
+
+        // Перетворюємо список рядків (Tags) у список об'єктів (RankTag)
+        rank.Tags = ur.Tags.Select(t => new RankTag { SponsorRankId = rank.Id, TagValue = t }).ToList();
 
         await _db.UpdateSponsorRankAsync(rank);
-
         _sawmill.Info($"{Player} updated sponsor rank {rank.Name}.");
 
-        //_adminManager.ReloadAdminsWithRank(ur.Id);
         await _sichSponsorManager.ReloadSponsorsAsync();
     }
 
@@ -172,11 +176,20 @@ public sealed class SponsorsAdminEui : BaseEui
         var rank = new DbSponsorRank
         {
             Name = ar.Name,
-            Color = ar.Color.ToHex(),
+            DefaultColor = ar.DefaultColor.ToHex(),
+            DefaultGhostColor = ar.DefaultGhostColor,
+            DefaultOocColor = ar.DefaultOocColor,
+            CanSetGhostColor = ar.CanSetGhostColor,
+            CanSetOocColor = ar.CanSetOocColor,
+            ShowInSponsorWindow = ar.ShowInSponsorWindow,
+            Priority = ar.Priority,
         };
 
-        await _db.AddSponsorRankAsync(rank);
+        // Теги додамо після збереження рангу (бо нам потрібен його згенерований Id),
+        // або Entity Framework зробить це автоматично, якщо ми прив'яжемо їх так:
+        rank.Tags = ar.Tags.Select(t => new RankTag { TagValue = t }).ToList();
 
+        await _db.AddSponsorRankAsync(rank);
         _sawmill.Info($"{Player} added sponsor rank {rank.Name}");
 
         await _sichSponsorManager.ReloadSponsorsAsync();
@@ -185,51 +198,42 @@ public sealed class SponsorsAdminEui : BaseEui
     private async Task HandleRemoveSponsor(RemoveSponsor ra)
     {
         var sponsor = await _db.GetSponsorDataForAsync(ra.UserId);
-        if (sponsor == null)
-        {
-            // Doesn't exist.
-            return;
-        }
+        if (sponsor == null) return;
 
         await _db.RemoveSponsorAsync(ra.UserId);
 
         var record = await _db.GetPlayerRecordByUserId(ra.UserId);
         _sawmill.Info($"{Player} removed sponsor {record?.LastSeenUserName ?? ra.UserId.ToString()}");
 
-        if (_playerManager.TryGetSessionById(ra.UserId, out var player))
-        {
-            await _sichSponsorManager.LoadData(player, default);
-        }
+        await _sichSponsorManager.ReloadSponsorAsync(ra.UserId); // Використовуємо новий метод з менеджера!
     }
 
     private async Task HandleUpdateSponsor(UpdateSponsor ua)
     {
         var sponsor = await _db.GetSponsorDataForAsync(ua.UserId);
-        if (sponsor == null)
-        {
-            // Was removed in the mean time I guess?
-            return;
-        }
+        if (sponsor == null) return;
 
-        sponsor.SponsorRankId = ua.RankId;
+        // ОНОВЛЕННЯ: Мапимо список рангів замість одного
+        sponsor.RoleAssignments = ua.RankIds.Select(rankId => new SponsorRoleAssignment
+        {
+            UserId = sponsor.UserId,
+            RankId = rankId
+        }).ToList();
+
+        // Оновлюємо персональні налаштування (адмін може їх скинути або змінити)
+        sponsor.SelectedGhostColor = ua.SelectedGhostColor;
+        sponsor.SelectedOocColor = ua.SelectedOocColor;
+        sponsor.SelectedGhostRankId = ua.SelectedGhostRankId;
+        sponsor.SelectedOocRankId = ua.SelectedOocRankId;
 
         await _db.UpdateSponsorAsync(sponsor);
 
         var playerRecord = await _db.GetPlayerRecordByUserId(ua.UserId);
-        var (bad, rankName) = await FetchAndCheckRank(ua.RankId);
-        if (bad)
-        {
-            return;
-        }
-
         var name = playerRecord?.LastSeenUserName ?? ua.UserId.ToString();
 
-        _sawmill.Info($"{Player} updated admin {name} to {rankName}");
+        _sawmill.Info($"{Player} updated sponsor {name} with {ua.RankIds.Count} ranks");
 
-        if (_playerManager.TryGetSessionById(ua.UserId, out var player))
-        {
-            await _sichSponsorManager.LoadData(player, default);
-        }
+        await _sichSponsorManager.ReloadSponsorAsync(ua.UserId); // Використовуємо новий точковий релоад
     }
 
     private async Task HandleCreateSponsor(AddSponsor ca)
@@ -240,85 +244,45 @@ public sealed class SponsorsAdminEui : BaseEui
         {
             userId = new NetUserId(guid);
             var playerRecord = await _db.GetPlayerRecordByUserId(userId);
-            if (playerRecord == null)
-            {
-                name = userId.ToString();
-            }
-            else
-            {
-                name = playerRecord.LastSeenUserName;
-            }
+            name = playerRecord == null ? userId.ToString() : playerRecord.LastSeenUserName;
         }
         else
         {
-            // Username entered, resolve user ID from DB.
             var dbPlayer = await _db.GetPlayerRecordByUserName(ca.UserNameOrId);
             if (dbPlayer == null)
             {
-                // username not in DB.
-                // TODO: Notify user.
-                _sawmill.Warning($"{Player} tried to add admin with unknown username {ca.UserNameOrId}.");
+                _sawmill.Warning($"{Player} tried to add sponsor with unknown username {ca.UserNameOrId}.");
                 return;
             }
-
             userId = dbPlayer.UserId;
             name = ca.UserNameOrId;
         }
 
         var existing = await _db.GetSponsorDataForAsync(userId);
-        if (existing != null)
-        {
-            // Already exists.
-            return;
-        }
-
-        var (bad, rankName) = await FetchAndCheckRank(ca.RankId);
-        if (bad)
-        {
-            return;
-        }
-
-        rankName ??= "<no rank>";
+        if (existing != null) return; // Already exists
 
         var sponsor = new SichSponsor
         {
-            SponsorRankId = ca.RankId,
             UserId = userId.UserId,
+            // Створюємо RoleAssignments зі списку RankIds
+            RoleAssignments = ca.RankIds.Select(rankId => new SponsorRoleAssignment
+            {
+                UserId = userId.UserId,
+                RankId = rankId
+            }).ToList()
         };
 
         await _db.AddSponsorAsync(sponsor);
+        _sawmill.Info($"{Player} added sponsor {name} with {ca.RankIds.Count} ranks");
 
-        _sawmill.Info($"{Player} added sponsor {name} as {rankName}");
-
-        if (_playerManager.TryGetSessionById(userId, out var player))
-        {
-            await _sichSponsorManager.LoadData(player, default);
-        }
-    }
-
-    private async Task<(bool bad, string?)> FetchAndCheckRank(int? rankId)
-    {
-        string? ret = null;
-        if (rankId is { } r)
-        {
-            var rank = await _db.GetSponsorRankAsync(r);
-            if (rank == null)
-            {
-                // Tried to set to nonexistent rank.
-                _sawmill.Warning($"{Player} tried to assign nonexistent admin rank.");
-                return (true, null);
-            }
-
-            ret = rank.Name;
-        }
-
-        return (false, ret);
+        await _sichSponsorManager.ReloadSponsorAsync(userId);
     }
 
     private async void LoadFromDb()
     {
         StateDirty();
         _isLoading = true;
+
         var (sponsors, ranks) = await _db.GetAllSichSponsorsAsync();
 
         _sponsors.Clear();
