@@ -199,3 +199,28 @@ public static class AdminSponsorsEuiMsg
 public sealed class RequestAdminSponsorWindowMessage : EntityEventArgs
 {
 }
+
+[Serializable, NetSerializable]
+public sealed class RequestSponsorListWindowMessage : EntityEventArgs
+{
+}
+
+[Serializable, NetSerializable]
+public sealed class SponsorListEuiState : EuiStateBase
+{
+    // Тільки та інформація, яку безпечно показувати всім гравцям
+    public List<PublicSponsorEntry> Sponsors { get; }
+
+    public SponsorListEuiState(List<PublicSponsorEntry> sponsors)
+    {
+        Sponsors = sponsors;
+    }
+}
+
+[Serializable, NetSerializable]
+public struct PublicSponsorEntry
+{
+    public string UserName;
+    public string TopRankName; // Назва найвищого рангу для відображення
+    public Color TopRankColor; // Колір цього рангу
+}
