@@ -21,7 +21,7 @@ namespace Content.Server.Database.Migrations.Postgres
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0")
+                .HasAnnotation("ProductVersion", "10.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -1228,6 +1228,33 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.ToTable("profile_role_loadout", (string)null);
                 });
 
+            modelBuilder.Entity("Content.Server.Database.RankTag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("rank_tags_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("SponsorRankId")
+                        .HasColumnType("integer")
+                        .HasColumnName("sponsor_rank_id");
+
+                    b.Property<string>("TagValue")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tag_value");
+
+                    b.HasKey("Id")
+                        .HasName("PK_rank_tags");
+
+                    b.HasIndex("SponsorRankId")
+                        .HasDatabaseName("IX_rank_tags_sponsor_rank_id");
+
+                    b.ToTable("rank_tags", (string)null);
+                });
+
             modelBuilder.Entity("Content.Server.Database.RoleWhitelist", b =>
                 {
                     b.Property<Guid>("PlayerUserId")
@@ -1343,31 +1370,37 @@ namespace Content.Server.Database.Migrations.Postgres
 
             modelBuilder.Entity("Content.Server.Database.SichSponsor", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("sich_sponsor_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("SponsorRankId")
-                        .HasColumnType("integer")
-                        .HasColumnName("sponsor_rank_id");
-
                     b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.HasKey("Id")
-                        .HasName("PK_sich_sponsor");
+                    b.Property<string>("SelectedGhostColor")
+                        .HasColumnType("text")
+                        .HasColumnName("selected_ghost_color");
 
-                    b.HasIndex("SponsorRankId")
-                        .HasDatabaseName("IX_sich_sponsor_sponsor_rank_id");
+                    b.Property<int?>("SelectedGhostRankId")
+                        .HasColumnType("integer")
+                        .HasColumnName("selected_ghost_rank_id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.Property<string>("SelectedOocColor")
+                        .HasColumnType("text")
+                        .HasColumnName("selected_ooc_color");
 
-                    b.ToTable("sich_sponsor", (string)null);
+                    b.Property<int?>("SelectedOocRankId")
+                        .HasColumnType("integer")
+                        .HasColumnName("selected_ooc_rank_id");
+
+                    b.HasKey("UserId")
+                        .HasName("PK_sich_sponsors");
+
+                    b.HasIndex("SelectedGhostRankId")
+                        .HasDatabaseName("IX_sich_sponsors_selected_ghost_rank_id");
+
+                    b.HasIndex("SelectedOocRankId")
+                        .HasDatabaseName("IX_sich_sponsors_selected_ooc_rank_id");
+
+                    b.ToTable("sich_sponsors", (string)null);
                 });
 
             modelBuilder.Entity("Content.Server.Database.SponsorRank", b =>
@@ -1375,24 +1408,67 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasColumnName("sponsor_rank_id");
+                        .HasColumnName("sponsor_ranks_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Color")
+                    b.Property<bool>("CanSetGhostColor")
+                        .HasColumnType("boolean")
+                        .HasColumnName("can_set_ghost_color");
+
+                    b.Property<bool>("CanSetOocColor")
+                        .HasColumnType("boolean")
+                        .HasColumnName("can_set_ooc_color");
+
+                    b.Property<string>("DefaultColor")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("color");
+                        .HasColumnName("default_color");
+
+                    b.Property<string>("DefaultGhostColor")
+                        .HasColumnType("text")
+                        .HasColumnName("default_ghost_color");
+
+                    b.Property<string>("DefaultOocColor")
+                        .HasColumnType("text")
+                        .HasColumnName("default_ooc_color");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.HasKey("Id")
-                        .HasName("PK_sponsor_rank");
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer")
+                        .HasColumnName("priority");
 
-                    b.ToTable("sponsor_rank", (string)null);
+                    b.Property<bool>("ShowInSponsorWindow")
+                        .HasColumnType("boolean")
+                        .HasColumnName("show_in_sponsor_window");
+
+                    b.HasKey("Id")
+                        .HasName("PK_sponsor_ranks");
+
+                    b.ToTable("sponsor_ranks", (string)null);
+                });
+
+            modelBuilder.Entity("Content.Server.Database.SponsorRoleAssignment", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<int>("RankId")
+                        .HasColumnType("integer")
+                        .HasColumnName("rank_id");
+
+                    b.HasKey("UserId", "RankId")
+                        .HasName("PK_sponsor_role_assignments");
+
+                    b.HasIndex("RankId")
+                        .HasDatabaseName("IX_sponsor_role_assignments_rank_id");
+
+                    b.ToTable("sponsor_role_assignments", (string)null);
                 });
 
             modelBuilder.Entity("Content.Server.Database.Trait", b =>
@@ -1984,6 +2060,18 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.Navigation("Profile");
                 });
 
+            modelBuilder.Entity("Content.Server.Database.RankTag", b =>
+                {
+                    b.HasOne("Content.Server.Database.SponsorRank", "SponsorRank")
+                        .WithMany("Tags")
+                        .HasForeignKey("SponsorRankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_rank_tags_sponsor_ranks_sponsor_rank_id");
+
+                    b.Navigation("SponsorRank");
+                });
+
             modelBuilder.Entity("Content.Server.Database.RoleWhitelist", b =>
                 {
                     b.HasOne("Content.Server.Database.Player", "Player")
@@ -2030,6 +2118,46 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.Navigation("Connection");
                 });
 
+            modelBuilder.Entity("Content.Server.Database.SichSponsor", b =>
+                {
+                    b.HasOne("Content.Server.Database.SponsorRank", "SelectedGhostRank")
+                        .WithMany()
+                        .HasForeignKey("SelectedGhostRankId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_sich_sponsors_sponsor_ranks_selected_ghost_rank_id");
+
+                    b.HasOne("Content.Server.Database.SponsorRank", "SelectedOocRank")
+                        .WithMany()
+                        .HasForeignKey("SelectedOocRankId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_sich_sponsors_sponsor_ranks_selected_ooc_rank_id");
+
+                    b.Navigation("SelectedGhostRank");
+
+                    b.Navigation("SelectedOocRank");
+                });
+
+            modelBuilder.Entity("Content.Server.Database.SponsorRoleAssignment", b =>
+                {
+                    b.HasOne("Content.Server.Database.SponsorRank", "Rank")
+                        .WithMany("RoleAssignments")
+                        .HasForeignKey("RankId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_sponsor_role_assignments_sponsor_ranks_rank_id");
+
+                    b.HasOne("Content.Server.Database.SichSponsor", "Sponsor")
+                        .WithMany("RoleAssignments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_sponsor_role_assignments_sich_sponsors_sponsor_user_id");
+
+                    b.Navigation("Rank");
+
+                    b.Navigation("Sponsor");
+                });
+
             modelBuilder.Entity("Content.Server.Database.Trait", b =>
                 {
                     b.HasOne("Content.Server.Database.Profile", "Profile")
@@ -2052,16 +2180,6 @@ namespace Content.Server.Database.Migrations.Postgres
                         .HasConstraintName("FK_unban_ban_ban_id");
 
                     b.Navigation("Ban");
-                });
-
-            modelBuilder.Entity("Content.Server.Database.SichSponsor", b =>
-                {
-                    b.HasOne("Content.Server.Database.SponsorRank", "SponsorRank")
-                        .WithMany("Sponsors")
-                        .HasForeignKey("SponsorRankId")
-                        .HasConstraintName("FK_sich_sponsor_sponsor_rank_sponsor_rank_id");
-
-                    b.Navigation("SponsorRank");
                 });
 
             modelBuilder.Entity("PlayerRound", b =>
@@ -2193,9 +2311,16 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.Navigation("Rounds");
                 });
 
+            modelBuilder.Entity("Content.Server.Database.SichSponsor", b =>
+                {
+                    b.Navigation("RoleAssignments");
+                });
+
             modelBuilder.Entity("Content.Server.Database.SponsorRank", b =>
                 {
-                    b.Navigation("Sponsors");
+                    b.Navigation("RoleAssignments");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }
