@@ -49,14 +49,26 @@ namespace Content.Server.Database
         public DbSet<RoleWhitelist> RoleWhitelists { get; set; } = null!;
         public DbSet<BanTemplate> BanTemplate { get; set; } = null!;
         public DbSet<IPIntelCache> IPIntelCache { get; set; } = null!;
+
         public DbSet<SichSponsor> SichSponsor { get; set; } = null!;
         public DbSet<SponsorRank> SponsorRank { get; set; } = null!;
+        public DbSet<RankTag> RankTag { get; set; } = null!;
+        public DbSet<SponsorRoleAssignment> SponsorRoleAssignments { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SichSponsor>()
-                .HasIndex(p => p.UserId)
-                .IsUnique();
+            modelBuilder.Entity<SponsorRoleAssignment>()
+                .HasKey(sra => new { sra.UserId, sra.RankId });
+
+            modelBuilder.Entity<SponsorRoleAssignment>()
+                .HasOne(sra => sra.Sponsor)
+                .WithMany(s => s.RoleAssignments)
+                .HasForeignKey(sra => sra.UserId);
+
+            modelBuilder.Entity<SponsorRoleAssignment>()
+                .HasOne(sra => sra.Rank)
+                .WithMany(r => r.RoleAssignments)
+                .HasForeignKey(sra => sra.RankId);
 
             modelBuilder.Entity<Preference>()
                 .HasIndex(p => p.UserId)
@@ -315,18 +327,40 @@ namespace Content.Server.Database
     public class SichSponsor
     {
         [Key]
-        public int Id { get; set; }
         public Guid UserId { get; set; }
-        public int? SponsorRankId { get; set; }
-        public SponsorRank? SponsorRank { get; set; }
+        public string? SelectedGhostColor { get; set; }
+        public string? SelectedOocColor { get; set; }
+        public List<SponsorRoleAssignment> RoleAssignments { get; set; } = new();
+    }
+
+    public class SponsorRoleAssignment
+    {
+        public Guid UserId { get; set; }
+        public SichSponsor Sponsor { get; set; } = default!;
+        public int RankId { get; set; }
+        public SponsorRank Rank { get; set; } = default!;
     }
 
     public class SponsorRank
     {
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; } = default!;
-        public string Color { get; set; } = "#FFFFFF";
-        public List<SichSponsor> Sponsors { get; set; } = default!;
+        public string DefaultColor { get; set; } = "#FFFFFF";
+
+        public bool CanSetGhostColor { get; set; }
+        public bool CanSetOocColor { get; set; }
+        public List<SponsorRoleAssignment> RoleAssignments { get; set; } = new();
+        public List<RankTag> Tags { get; set; } = new();
+    }
+
+    public class RankTag
+    {
+        [Key]
+        public int Id { get; set; }
+        public int SponsorRankId { get; set; }
+        public SponsorRank SponsorRank { get; set; } = default!;
+        public string TagValue { get; set; } = default!;
     }
 
     public class Preference
