@@ -154,20 +154,53 @@ public sealed class SponsorManager : ISponsorManager, IPostInjectInit
 
     public string? GetGhostColor(NetUserId userId)
     {
-        if (!TryGetCachedSponsor(userId, out var sponsor) || string.IsNullOrEmpty(sponsor.SelectedGhostColor) || sponsor.RoleAssignments == null)
+        if (!TryGetCachedSponsor(userId, out var sponsor) || sponsor.RoleAssignments == null)
             return null;
 
-        var canSetColor = sponsor.RoleAssignments.Any(ra => ra.Rank != null && ra.Rank.CanSetGhostColor);
-        return canSetColor ? sponsor.SelectedGhostColor : null;
+        // 1. Спочатку перевіряємо, чи є в гравця право на власний (кастомний) колір
+        var canSetCustomColor = sponsor.RoleAssignments.Any(ra => ra.Rank != null && ra.Rank.CanSetGhostColor);
+        if (canSetCustomColor && !string.IsNullOrEmpty(sponsor.SelectedGhostColor))
+        {
+            return sponsor.SelectedGhostColor;
+        }
+
+        // 2. Якщо кастомного кольору немає, беремо фіксований колір з обраного рангу
+        if (sponsor.SelectedGhostRank != null && !string.IsNullOrEmpty(sponsor.SelectedGhostRank.DefaultGhostColor))
+        {
+            // БЕЗПЕКА: Перевіряємо, чи гравець дійсно досі має цей ранг у своїх RoleAssignments
+            var stillHasRank = sponsor.RoleAssignments.Any(ra => ra.RankId == sponsor.SelectedGhostRankId);
+            if (stillHasRank)
+            {
+                return sponsor.SelectedGhostRank.DefaultGhostColor;
+            }
+        }
+
+        return null;
     }
 
     public string? GetOocColor(NetUserId userId)
     {
-        if (!TryGetCachedSponsor(userId, out var sponsor) || string.IsNullOrEmpty(sponsor.SelectedOocColor) || sponsor.RoleAssignments == null)
+        if (!TryGetCachedSponsor(userId, out var sponsor) || sponsor.RoleAssignments == null)
             return null;
 
-        var canSetColor = sponsor.RoleAssignments.Any(ra => ra.Rank != null && ra.Rank.CanSetOocColor);
-        return canSetColor ? sponsor.SelectedOocColor : null;
+        // 1. Перевірка на кастомний колір
+        var canSetCustomColor = sponsor.RoleAssignments.Any(ra => ra.Rank != null && ra.Rank.CanSetOocColor);
+        if (canSetCustomColor && !string.IsNullOrEmpty(sponsor.SelectedOocColor))
+        {
+            return sponsor.SelectedOocColor;
+        }
+
+        // 2. Перевірка на фіксований колір з обраного рангу
+        if (sponsor.SelectedOocRank != null && !string.IsNullOrEmpty(sponsor.SelectedOocRank.DefaultOocColor))
+        {
+            var stillHasRank = sponsor.RoleAssignments.Any(ra => ra.RankId == sponsor.SelectedOocRankId);
+            if (stillHasRank)
+            {
+                return sponsor.SelectedOocRank.DefaultOocColor;
+            }
+        }
+
+        return null;
     }
 
     #endregion
