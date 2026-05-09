@@ -1,6 +1,9 @@
 using Content.Client.Eui;
+using Content.Client.Examine;
 using Content.Client.Stylesheets;
+using Content.Shared.Clothing;
 using Content.Shared.Eui;
+using Content.Shared.Preferences.Loadouts;
 using Content.Shared.Sich.Sponsors;
 using JetBrains.Annotations;
 using Robust.Client.Graphics;
@@ -8,9 +11,13 @@ using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.CustomControls;
+using Robust.Shared.Input;
+using Robust.Shared.IoC;
 using Robust.Shared.Maths;
+using Robust.Shared.Prototypes;
 using System.Linq;
 using System.Numerics;
+// Додайте using для вашого LoadoutPrototype (наприклад: using Content.Shared.Preferences.Loadouts;)
 using static Robust.Client.UserInterface.Controls.BoxContainer;
 
 namespace Content.Client.Sich.Sponsors.UI;
@@ -88,11 +95,11 @@ public sealed partial class PersonalSponsorEui : BaseEui
         public PersonalSponsorWindow(PersonalSponsorEui eui)
         {
             _eui = eui;
-            Title = Loc.GetString("sponsors-eui-personal-title"); // "Налаштування Спонсора"
+            Title = Loc.GetString("sponsors-eui-personal-title");
             MinSize = new Vector2(450, 550);
 
             var playerManager = IoCManager.Resolve<IPlayerManager>();
-            var playerName = playerManager.LocalPlayer?.Name ?? "Гравець";
+            var playerName = playerManager.LocalPlayer?.Name ?? Loc.GetString("sponsors-eui-personal-player-fallback");
 
             NameLabel = new Label
             {
@@ -121,16 +128,16 @@ public sealed partial class PersonalSponsorEui : BaseEui
             var overviewBox = new BoxContainer
             {
                 Orientation = LayoutOrientation.Vertical,
-                Children = { new Label { Text = "Ваші активні ранги:", Margin = new Thickness(0, 0, 0, 10) }, overviewScroll }
+                Children = { new Label { Text = Loc.GetString("sponsors-eui-personal-active-ranks"), Margin = new Thickness(0, 0, 0, 10) }, overviewScroll }
             };
-            TabContainer.SetTabTitle(overviewBox, Loc.GetString("sponsors-eui-personal-tab-overview")); // "Огляд"
+            TabContainer.SetTabTitle(overviewBox, Loc.GetString("sponsors-eui-personal-tab-overview"));
 
             // --- ВКЛАДКА 2: КОЛЬОРИ ---
             GhostDropdown = new OptionButton { HorizontalExpand = true };
             GhostColorPicker = new ColorSelectorSliders
             {
                 SelectorType = ColorSelectorSliders.ColorSelectorType.Hsv,
-                Visible = false // Приховано за замовчуванням
+                Visible = false
             };
 
             GhostDropdown.OnItemSelected += args =>
@@ -145,7 +152,7 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 Margin = new Thickness(0, 0, 0, 15),
                 Children =
                 {
-                    new Label { Text = "Колір Привида", StyleClasses = { StyleClass.LabelHeading } },
+                    new Label { Text = Loc.GetString("sponsors-eui-personal-ghost-color"), StyleClasses = { StyleClass.LabelHeading } },
                     GhostDropdown,
                     GhostColorPicker
                 }
@@ -169,7 +176,7 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 Orientation = LayoutOrientation.Vertical,
                 Children =
                 {
-                    new Label { Text = "Колір OOC чату", StyleClasses = { StyleClass.LabelHeading } },
+                    new Label { Text = Loc.GetString("sponsors-eui-personal-ooc-color"), StyleClasses = { StyleClass.LabelHeading } },
                     OocDropdown,
                     OocColorPicker
                 }
@@ -183,20 +190,45 @@ public sealed partial class PersonalSponsorEui : BaseEui
                     new BoxContainer
                     {
                         Orientation = LayoutOrientation.Vertical,
-                        Children = { ghostSection, oocSection } // Тут все правильно, бо використовується синтаксис колекції
+                        Children = { ghostSection, oocSection }
                     }
                 }
             };
-            TabContainer.SetTabTitle(colorsScroll, Loc.GetString("sponsors-eui-personal-tab-colors")); // "Кольори"
+            TabContainer.SetTabTitle(colorsScroll, Loc.GetString("sponsors-eui-personal-tab-colors"));
+
+            // --- ВКЛАДКА 3: СПОРЯДЖЕННЯ (LOADOUTS) ---
+            var loadoutsScroll = new ScrollContainer { VerticalExpand = true };
+            var loadoutsGrid = new GridContainer
+            {
+                HorizontalExpand = true,
+                Columns = 4,
+                Margin = new Thickness(10)
+            };
+
+            var protoManager = IoCManager.Resolve<IPrototypeManager>();
+            var clientSponsorManager = IoCManager.Resolve<IClientSponsorManager>();
+
+            foreach (var loadout in protoManager.EnumeratePrototypes<LoadoutPrototype>())
+            {
+                if (!string.IsNullOrEmpty(loadout.SponsorTag) && clientSponsorManager.HasTag(loadout.SponsorTag))
+                {
+                    var loadoutControl = new SponsorLoadoutControl(loadout);
+                    loadoutsGrid.AddChild(loadoutControl);
+                }
+            }
+
+            loadoutsScroll.AddChild(loadoutsGrid);
+            TabContainer.SetTabTitle(loadoutsScroll, Loc.GetString("sponsors-eui-personal-tab-loadouts"));
 
             // Додаємо вкладки
             tabs.AddChild(overviewBox);
             tabs.AddChild(colorsScroll);
+            tabs.AddChild(loadoutsScroll);
 
             // Кнопка збереження
             SaveButton = new Button
             {
-                Text = Loc.GetString("sponsors-eui-personal-save"), // "Зберегти налаштування"
+                Text = Loc.GetString("sponsors-eui-personal-save"),
                 HorizontalAlignment = HAlignment.Right
             };
             SaveButton.OnPressed += OnSavePressed;
@@ -211,18 +243,16 @@ public sealed partial class PersonalSponsorEui : BaseEui
 
         public void UpdateState(PersonalSponsorSettingsEuiState state)
         {
-            // 1. Фарбуємо нікнейм у колір найвищого рангу (оскільки вони відсортовані сервером, беремо перший)
             var topRank = state.AllowedRanks.FirstOrDefault();
             if (topRank.Name != null)
             {
                 NameLabel.FontColorOverride = Color.FromHex(topRank.DefaultColor);
             }
 
-            // 2. Малюємо плашки рангів
             RanksContainer.RemoveAllChildren();
             if (state.AllowedRanks.Count == 0)
             {
-                RanksContainer.AddChild(new Label { Text = "У вас немає активних рангів.", StyleClasses = { StyleClass.Italic } });
+                RanksContainer.AddChild(new Label { Text = Loc.GetString("sponsors-eui-personal-no-ranks"), StyleClasses = { StyleClass.Italic } });
             }
             else
             {
@@ -230,7 +260,6 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 {
                     var color = Color.FromHex(rank.DefaultColor);
 
-                    // Створюємо гарну плашку (Panel) з напівпрозорим фоном
                     var panel = new PanelContainer
                     {
                         PanelOverride = new StyleBoxFlat
@@ -254,7 +283,6 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 }
             }
 
-            // 3. Налаштовуємо випадні списки для кольорів
             PopulateDropdown(GhostDropdown, state.CanSetCustomGhostColor, state.AllowedRanks, true);
             PopulateDropdown(OocDropdown, state.CanSetCustomOocColor, state.AllowedRanks, false);
 
@@ -298,11 +326,11 @@ public sealed partial class PersonalSponsorEui : BaseEui
         private void PopulateDropdown(OptionButton dropdown, bool canSetCustom, List<PersonalSponsorRankInfo> ranks, bool isGhost)
         {
             dropdown.Clear();
-            dropdown.AddItem("Стандартний (Вимкнено)", OptionNone);
+            dropdown.AddItem(Loc.GetString("sponsors-eui-personal-dropdown-none"), OptionNone);
 
             if (canSetCustom)
             {
-                dropdown.AddItem("Власний колір (Кастомний)", OptionCustom);
+                dropdown.AddItem(Loc.GetString("sponsors-eui-personal-dropdown-custom"), OptionCustom);
             }
 
             foreach (var rank in ranks)
@@ -310,7 +338,7 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 var fixedColor = isGhost ? rank.FixedGhostColor : rank.FixedOocColor;
                 if (!string.IsNullOrEmpty(fixedColor))
                 {
-                    dropdown.AddItem($"Колір рангу: {rank.Name}", rank.Id);
+                    dropdown.AddItem(Loc.GetString("sponsors-eui-personal-dropdown-rank", ("rank", rank.Name)), rank.Id);
                 }
             }
         }

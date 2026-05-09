@@ -1,0 +1,13 @@
+sponsors-eui-personal-title = Налаштування Спонсора
+sponsors-eui-personal-tab-overview = Огляд
+sponsors-eui-personal-tab-colors = Кольори
+sponsors-eui-personal-save = Зберегти налаштування
+sponsors-eui-personal-player-fallback = Гравець
+sponsors-eui-personal-active-ranks = Ваші активні ранги:
+sponsors-eui-personal-no-ranks = У вас немає активних рангів.
+sponsors-eui-personal-ghost-color = Колір Привида
+sponsors-eui-personal-ooc-color = Колір OOC чату
+sponsors-eui-personal-dropdown-none = Стандартний (Вимкнено)
+sponsors-eui-personal-dropdown-custom = Власний колір (Кастомний)
+sponsors-eui-personal-dropdown-rank = Колір рангу: { $rank }
+sponsors-eui-personal-tab-loadouts = Спорядження
