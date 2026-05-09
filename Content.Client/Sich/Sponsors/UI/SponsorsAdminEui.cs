@@ -1,7 +1,7 @@
 using Content.Client.Eui;
 using Content.Client.Stylesheets;
 using Content.Shared.Eui;
-using Content.Shared.Sich.Sponsors; // Наш оновлений простір імен
+using Content.Shared.Sich.Sponsors;
 using JetBrains.Annotations;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
@@ -12,13 +12,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using static Content.Shared.Sich.Sponsors.AdminSponsorsEuiMsg; // Оновлений Msg
+using static Content.Shared.Sich.Sponsors.AdminSponsorsEuiMsg;
 using static Robust.Client.UserInterface.Controls.BoxContainer;
 
 namespace Content.Client.Sich.Sponsors.UI;
 
 [UsedImplicitly]
-public sealed partial class AdminSponsorsEui : BaseEui // Перейменовано для відповідності серверу
+public sealed partial class AdminSponsorsEui : BaseEui
 {
     private readonly Menu _menu;
     private readonly List<DefaultWindow> _subWindows = new();
@@ -91,7 +91,6 @@ public sealed partial class AdminSponsorsEui : BaseEui // Перейменова
 
     private void SaveSponsorPressed(EditSponsorWindow popup)
     {
-        // Збираємо всі відмічені чекбокси (обрані ранги)
         var selectedRanks = popup.RankCheckboxes
             .Where(kv => kv.Value.Pressed)
             .Select(kv => kv.Key)
@@ -103,8 +102,6 @@ public sealed partial class AdminSponsorsEui : BaseEui // Перейменова
             {
                 UserId = src.UserId,
                 RankIds = selectedRanks,
-
-                // Передаємо персональні налаштування (адмін може їх змінювати/очищати)
                 SelectedGhostColor = string.IsNullOrWhiteSpace(popup.GhostColorEdit.Text) ? null : popup.GhostColorEdit.Text,
                 SelectedOocColor = string.IsNullOrWhiteSpace(popup.OocColorEdit.Text) ? null : popup.OocColorEdit.Text
             });
@@ -124,7 +121,6 @@ public sealed partial class AdminSponsorsEui : BaseEui // Перейменова
 
     private void SaveSponsorRankPressed(EditSponsorRankWindow popup)
     {
-        // Парсимо теги з коми в список
         var tagsList = popup.TagsEdit.Text
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .ToList();
@@ -178,48 +174,113 @@ public sealed partial class AdminSponsorsEui : BaseEui // Перейменова
 
         // --- МАЛЮЄМО СПИСОК ГРАВЦІВ ---
         _menu.SponsorsList.RemoveAllChildren();
-        foreach (var sponsor in s.Sponsors.OrderBy(d => d.UserName))
+
+        // 1. Групуємо спонсорів за їхнім найвищим рангом (використовуємо -1 для "Без рангу")
+        var groupedSponsors = new Dictionary<int, List<AdminSponsorsEuiState.SponsorData>>();
+
+        foreach (var sponsor in s.Sponsors)
         {
-            var al = _menu.SponsorsList;
-            var name = sponsor.UserName ?? sponsor.UserId.ToString();
-            var nameLabel = new Label { Text = name };
-            al.AddChild(nameLabel);
+            int topRankId = -1; // -1 означатиме, що рангу немає
+            int minPriority = int.MaxValue;
 
-            // Генеруємо текст з усіма рангами гравця
-            string ranksText;
-            Color mainColor = Color.White;
-
-            if (sponsor.RankIds.Count > 0)
+            foreach (var rId in sponsor.RankIds)
             {
-                var rankNames = sponsor.RankIds
-                    .Where(id => _ranks.ContainsKey(id))
-                    .Select(id => _ranks[id].Name);
+                if (_ranks.TryGetValue(rId, out var rankData))
+                {
+                    if (rankData.Priority < minPriority)
+                    {
+                        minPriority = rankData.Priority;
+                        topRankId = rId;
+                    }
+                }
+            }
 
-                ranksText = string.Join(", ", rankNames);
+            if (!groupedSponsors.ContainsKey(topRankId))
+                groupedSponsors[topRankId] = new List<AdminSponsorsEuiState.SponsorData>();
 
-                // Беремо колір першого знайденого рангу
-                var firstRankId = sponsor.RankIds.FirstOrDefault(id => _ranks.ContainsKey(id));
-                if (firstRankId != 0) mainColor = _ranks[firstRankId].DefaultColor;
+            groupedSponsors[topRankId].Add(sponsor);
+        }
+
+        // 2. Сортуємо групи (найвищий пріоритет спочатку, "Без рангу" (-1) - в кінці)
+        var sortedRankIds = groupedSponsors.Keys
+            .OrderBy(k => k == -1 ? 1 : 0) // Група -1 завжди буде останньою (1 > 0)
+            .ThenBy(k => k == -1 ? 0 : _ranks[k].Priority) // Інші сортуємо за пріоритетом
+            .ToList();
+
+        // 3. Відмальовуємо групи
+        foreach (var rankId in sortedRankIds)
+        {
+            var group = groupedSponsors[rankId];
+            string headerText;
+            Color headerColor;
+
+            if (rankId != -1 && _ranks.TryGetValue(rankId, out var rankDef))
+            {
+                headerText = rankDef.Name;
+                headerColor = rankDef.DefaultColor;
             }
             else
             {
-                ranksText = Loc.GetString("sponsors-eui-edit-no-rank-text");
+                // Замініть на ключ локалізації, якщо він вже існує
+                headerText = Loc.GetString("sponsors-eui-admin-no-rank-group") != "sponsors-eui-admin-no-rank-group"
+                             ? Loc.GetString("sponsors-eui-admin-no-rank-group")
+                             : "Без рангу / Інші";
+                headerColor = Color.DarkGray;
             }
 
-            var rankControl = new Label
+            // Додаємо заголовок групи
+            var headerLabel = new Label
             {
-                Text = ranksText,
-                HorizontalAlignment = Control.HAlignment.Center,
-                HorizontalExpand = true,
-                FontColorOverride = mainColor
+                Text = headerText,
+                FontColorOverride = headerColor,
+                StyleClasses = { StyleClass.LabelHeading }
             };
 
-            nameLabel.FontColorOverride = mainColor;
-            al.AddChild(rankControl);
+            if (_menu.SponsorsList.ChildCount > 0)
+                headerLabel.Margin = new Thickness(0, 15, 0, 5); // Відступ зверху для наступних груп
+            else
+                headerLabel.Margin = new Thickness(0, 0, 0, 5);
 
-            var editButton = new Button { Text = Loc.GetString("sponsors-eui-edit-title-button") };
-            editButton.OnPressed += _ => OpenEditWindow(sponsor);
-            al.AddChild(editButton);
+            _menu.SponsorsList.AddChild(headerLabel);
+
+            // Створюємо сітку для гравців цієї групи
+            var grid = new GridContainer { Columns = 3, HorizontalExpand = true };
+            _menu.SponsorsList.AddChild(grid);
+
+            foreach (var sponsor in group.OrderBy(d => d.UserName))
+            {
+                var name = sponsor.UserName ?? sponsor.UserId.ToString();
+                var nameLabel = new Label { Text = name, FontColorOverride = headerColor };
+                grid.AddChild(nameLabel);
+
+                string ranksText;
+                if (sponsor.RankIds.Count > 0)
+                {
+                    var rankNames = sponsor.RankIds
+                        .Where(id => _ranks.ContainsKey(id))
+                        .OrderBy(id => _ranks[id].Priority) // Сортуємо виведення рангів по пріоритету
+                        .Select(id => _ranks[id].Name);
+
+                    ranksText = string.Join(", ", rankNames);
+                }
+                else
+                {
+                    ranksText = Loc.GetString("sponsors-eui-edit-no-rank-text");
+                }
+
+                var rankControl = new Label
+                {
+                    Text = ranksText,
+                    HorizontalAlignment = Control.HAlignment.Center,
+                    HorizontalExpand = true,
+                    FontColorOverride = headerColor
+                };
+                grid.AddChild(rankControl);
+
+                var editButton = new Button { Text = Loc.GetString("sponsors-eui-edit-title-button") };
+                editButton.OnPressed += _ => OpenEditWindow(sponsor);
+                grid.AddChild(editButton);
+            }
         }
 
         // --- МАЛЮЄМО СПИСОК РАНГІВ ---
@@ -243,7 +304,7 @@ public sealed partial class AdminSponsorsEui : BaseEui // Перейменова
 
     private sealed class Menu : DefaultWindow
     {
-        public readonly GridContainer SponsorsList;
+        public readonly BoxContainer SponsorsList; // Змінено на BoxContainer
         public readonly GridContainer SponsorsRanksList;
         public readonly Button AddSponsorButton;
         public readonly Button AddSponsorRankButton;
@@ -257,7 +318,8 @@ public sealed partial class AdminSponsorsEui : BaseEui // Перейменова
             AddSponsorButton = new Button { Text = Loc.GetString("sponsors-eui-menu-add-sponsor-button"), HorizontalAlignment = HAlignment.Right };
             AddSponsorRankButton = new Button { Text = Loc.GetString("sponsors-eui-menu-add-sponsor-rank-button"), HorizontalAlignment = HAlignment.Right };
 
-            SponsorsList = new GridContainer { Columns = 3, VerticalExpand = true };
+            // Використовуємо VBox для того, щоб підтримувати групи з заголовками
+            SponsorsList = new BoxContainer { Orientation = LayoutOrientation.Vertical, VerticalExpand = true };
             var adminVBox = new BoxContainer
             {
                 Orientation = LayoutOrientation.Vertical,
@@ -312,7 +374,6 @@ public sealed partial class AdminSponsorsEui : BaseEui // Перейменова
                 nameControl = NameEdit = new LineEdit { PlaceHolder = "Ім'я або UserId" };
             }
 
-            // Список рангів (CheckBoxes)
             var ranksVBox = new BoxContainer { Orientation = LayoutOrientation.Vertical };
             foreach (var (rId, rank) in ui._ranks.OrderBy(r => r.Value.Priority))
             {
