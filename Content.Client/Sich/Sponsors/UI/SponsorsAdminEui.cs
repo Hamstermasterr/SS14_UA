@@ -221,10 +221,7 @@ public sealed partial class AdminSponsorsEui : BaseEui
             }
             else
             {
-                // Замініть на ключ локалізації, якщо він вже існує
-                headerText = Loc.GetString("sponsors-eui-admin-no-rank-group") != "sponsors-eui-admin-no-rank-group"
-                             ? Loc.GetString("sponsors-eui-admin-no-rank-group")
-                             : "Без рангу / Інші";
+                headerText = Loc.GetString("sponsors-eui-admin-no-rank-group");
                 headerColor = Color.DarkGray;
             }
 
@@ -288,7 +285,7 @@ public sealed partial class AdminSponsorsEui : BaseEui
         foreach (var kv in s.SponsorRanks.OrderBy(r => r.Value.Priority))
         {
             var rank = kv.Value;
-            var infoText = $"{rank.Name} (Пріоритет: {rank.Priority})";
+            var infoText = Loc.GetString("sponsors-eui-admin-rank-info", ("name", rank.Name), ("priority", rank.Priority));
 
             _menu.SponsorsRanksList.AddChild(new Label { Text = infoText, FontColorOverride = rank.DefaultColor });
 
@@ -304,7 +301,7 @@ public sealed partial class AdminSponsorsEui : BaseEui
 
     private sealed class Menu : DefaultWindow
     {
-        public readonly BoxContainer SponsorsList; // Змінено на BoxContainer
+        public readonly BoxContainer SponsorsList;
         public readonly GridContainer SponsorsRanksList;
         public readonly Button AddSponsorButton;
         public readonly Button AddSponsorRankButton;
@@ -318,7 +315,6 @@ public sealed partial class AdminSponsorsEui : BaseEui
             AddSponsorButton = new Button { Text = Loc.GetString("sponsors-eui-menu-add-sponsor-button"), HorizontalAlignment = HAlignment.Right };
             AddSponsorRankButton = new Button { Text = Loc.GetString("sponsors-eui-menu-add-sponsor-rank-button"), HorizontalAlignment = HAlignment.Right };
 
-            // Використовуємо VBox для того, щоб підтримувати групи з заголовками
             SponsorsList = new BoxContainer { Orientation = LayoutOrientation.Vertical, VerticalExpand = true };
             var adminVBox = new BoxContainer
             {
@@ -365,13 +361,13 @@ public sealed partial class AdminSponsorsEui : BaseEui
             if (data is { } dat)
             {
                 var name = dat.UserName ?? dat.UserId.ToString();
-                Title = $"Редагування спонсора: {name}";
+                Title = Loc.GetString("sponsors-eui-edit-sponsor-window-title", ("name", name));
                 nameControl = new Label { Text = name };
             }
             else
             {
                 Title = Loc.GetString("sponsors-eui-menu-add-sponsor-button");
-                nameControl = NameEdit = new LineEdit { PlaceHolder = "Ім'я або UserId" };
+                nameControl = NameEdit = new LineEdit { PlaceHolder = Loc.GetString("sponsors-eui-edit-sponsor-window-name-placeholder") };
             }
 
             var ranksVBox = new BoxContainer { Orientation = LayoutOrientation.Vertical };
@@ -386,8 +382,8 @@ public sealed partial class AdminSponsorsEui : BaseEui
                 ranksVBox.AddChild(cb);
             }
 
-            GhostColorEdit = new LineEdit { PlaceHolder = "Кастомний колір Привида (HEX)", Text = data?.SelectedGhostColor ?? "" };
-            OocColorEdit = new LineEdit { PlaceHolder = "Кастомний колір OOC (HEX)", Text = data?.SelectedOocColor ?? "" };
+            GhostColorEdit = new LineEdit { PlaceHolder = Loc.GetString("sponsors-eui-edit-sponsor-window-ghost-color-placeholder"), Text = data?.SelectedGhostColor ?? "" };
+            OocColorEdit = new LineEdit { PlaceHolder = Loc.GetString("sponsors-eui-edit-sponsor-window-ooc-color-placeholder"), Text = data?.SelectedOocColor ?? "" };
 
             SaveButton = new Button { Text = Loc.GetString("sponsors-eui-edit-sponsor-window-save-button"), HorizontalAlignment = HAlignment.Right };
 
@@ -405,9 +401,9 @@ public sealed partial class AdminSponsorsEui : BaseEui
                 Children =
                 {
                     nameControl,
-                    new Label { Text = "Ранги гравця:", StyleClasses = { StyleClass.LabelHeading }, Margin = new Thickness(0, 10, 0, 5) },
+                    new Label { Text = Loc.GetString("sponsors-eui-edit-sponsor-window-ranks-label"), StyleClasses = { StyleClass.LabelHeading }, Margin = new Thickness(0, 10, 0, 5) },
                     new ScrollContainer { VerticalExpand = true, MinSize = new Vector2(0, 150), Children = { ranksVBox } },
-                    new Label { Text = "Персональні Override кольори:", Margin = new Thickness(0, 10, 0, 5) },
+                    new Label { Text = Loc.GetString("sponsors-eui-edit-sponsor-window-override-colors-label"), Margin = new Thickness(0, 10, 0, 5) },
                     GhostColorEdit,
                     OocColorEdit,
                     new Control { VerticalExpand = true }, // Спейсер
@@ -442,19 +438,19 @@ public sealed partial class AdminSponsorsEui : BaseEui
             SourceId = data?.Key;
             var rank = data?.Value;
 
-            NameEdit = new LineEdit { PlaceHolder = "Назва рангу", Text = rank?.Name ?? "" };
+            NameEdit = new LineEdit { PlaceHolder = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-name-placeholder"), Text = rank?.Name ?? "" };
             ColorEdit = new ColorSelectorSliders { Color = rank?.DefaultColor ?? Color.White, SelectorType = ColorSelectorSliders.ColorSelectorType.Hsv };
 
-            PrioritySpin = new SpinBox { Value = rank?.Priority ?? 0, ToolTip = "Менше число = вищий пріоритет (напр. 0 > 10)" };
-            ShowInWindowCheck = new CheckBox { Text = "Показувати в публічному списку", Pressed = rank?.ShowInSponsorWindow ?? true };
+            PrioritySpin = new SpinBox { Value = rank?.Priority ?? 0, ToolTip = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-priority-tooltip") };
+            ShowInWindowCheck = new CheckBox { Text = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-show-in-window-check"), Pressed = rank?.ShowInSponsorWindow ?? true };
 
-            CanGhostCheck = new CheckBox { Text = "Дозволити кастомний колір Привида", Pressed = rank?.CanSetGhostColor ?? false };
-            DefaultGhostEdit = new LineEdit { PlaceHolder = "Фіксований колір Привида (HEX, напр. #FF0000)", Text = rank?.DefaultGhostColor ?? "" };
+            CanGhostCheck = new CheckBox { Text = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-can-ghost-check"), Pressed = rank?.CanSetGhostColor ?? false };
+            DefaultGhostEdit = new LineEdit { PlaceHolder = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-default-ghost-placeholder"), Text = rank?.DefaultGhostColor ?? "" };
 
-            CanOocCheck = new CheckBox { Text = "Дозволити кастомний колір OOC", Pressed = rank?.CanSetOocColor ?? false };
-            DefaultOocEdit = new LineEdit { PlaceHolder = "Фіксований колір OOC (HEX, напр. #00FF00)", Text = rank?.DefaultOocColor ?? "" };
+            CanOocCheck = new CheckBox { Text = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-can-ooc-check"), Pressed = rank?.CanSetOocColor ?? false };
+            DefaultOocEdit = new LineEdit { PlaceHolder = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-default-ooc-placeholder"), Text = rank?.DefaultOocColor ?? "" };
 
-            TagsEdit = new LineEdit { PlaceHolder = "Теги через кому (напр. vip_loadout, custom_job)", Text = rank != null ? string.Join(", ", rank.Value.Tags) : "" };
+            TagsEdit = new LineEdit { PlaceHolder = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-tags-placeholder"), Text = rank != null ? string.Join(", ", rank.Value.Tags) : "" };
 
             SaveButton = new Button { Text = Loc.GetString("sponsors-eui-menu-save-sponsor-rank-button"), HorizontalAlignment = HAlignment.Right };
             var bottomButtons = new BoxContainer { Orientation = LayoutOrientation.Horizontal };
@@ -471,20 +467,20 @@ public sealed partial class AdminSponsorsEui : BaseEui
                 SeparationOverride = 5,
                 Children =
                 {
-                    new Label { Text = "Основні налаштування", StyleClasses = { StyleClass.LabelHeading } },
+                    new Label { Text = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-basic-settings-label"), StyleClasses = { StyleClass.LabelHeading } },
                     NameEdit,
-                    new BoxContainer { Orientation = LayoutOrientation.Horizontal, Children = { new Label{Text="Пріоритет: "}, PrioritySpin } },
+                    new BoxContainer { Orientation = LayoutOrientation.Horizontal, Children = { new Label{Text= Loc.GetString("sponsors-eui-edit-sponsor-rank-window-priority-label")}, PrioritySpin } },
                     ShowInWindowCheck,
                     TagsEdit,
 
-                    new Label { Text = "Базовий колір назви рангу:", Margin = new Thickness(0, 10, 0, 0) },
+                    new Label { Text = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-base-color-label"), Margin = new Thickness(0, 10, 0, 0) },
                     ColorEdit,
 
-                    new Label { Text = "Налаштування Привида", StyleClasses = { StyleClass.LabelHeading }, Margin = new Thickness(0, 10, 0, 0) },
+                    new Label { Text = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-ghost-settings-label"), StyleClasses = { StyleClass.LabelHeading }, Margin = new Thickness(0, 10, 0, 0) },
                     CanGhostCheck,
                     DefaultGhostEdit,
 
-                    new Label { Text = "Налаштування OOC", StyleClasses = { StyleClass.LabelHeading }, Margin = new Thickness(0, 10, 0, 0) },
+                    new Label { Text = Loc.GetString("sponsors-eui-edit-sponsor-rank-window-ooc-settings-label"), StyleClasses = { StyleClass.LabelHeading }, Margin = new Thickness(0, 10, 0, 0) },
                     CanOocCheck,
                     DefaultOocEdit,
 
