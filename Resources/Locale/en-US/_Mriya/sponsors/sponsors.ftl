@@ -13,13 +13,14 @@ sponsors-eui-personal-dropdown-rank = Колір рангу: { $rank }
 sponsors-eui-personal-tab-loadouts = Спорядження
 
 # Головне меню та вкладки
-sponsors-eui-menu-title = Адмін-панель Спонсорів
+sponsors-eui-menu-title = Спонсори
 sponsors-eui-menu-sponsors-tab-title = Спонсори
 sponsors-eui-menu-sponsor-ranks-tab-title = Ранги
 sponsors-eui-menu-add-sponsor-button = Додати спонсора
 sponsors-eui-menu-add-sponsor-rank-button = Створити ранг
 sponsors-eui-admin-no-rank-group = Без рангу / Інші
 sponsors-eui-admin-rank-info = { $name } (Пріоритет: { $priority })
+sponsors-eui-loading-or-empty = Порожній
 
 # Кнопки загальні
 sponsors-eui-edit-title-button = Редагувати
