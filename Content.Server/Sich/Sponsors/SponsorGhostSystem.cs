@@ -9,7 +9,7 @@ namespace Content.Server.Sich.Sponsors;
 
 public sealed class SponsorGhostSystem : EntitySystem
 {
-    [Dependency] private readonly ISichSponsorManager _sichSponsorManager = default!;
+    [Dependency] private readonly ISponsorManager _sichSponsorManager = default!;
 
     public override void Initialize()
     {
@@ -55,8 +55,7 @@ public sealed class SponsorGhostSystem : EntitySystem
         {
             return null;
         }
-        if(sponsor.SponsorRank == null) return null;
-        return sponsor.SponsorRank.Color;
+        return sponsor.SelectedGhostColor;
     }
 
     private bool TryGetPlayerSessionFromEntity(EntityUid uid, [NotNullWhen(true)] out ICommonSession? session)

@@ -22,7 +22,7 @@ namespace Content.Server.Sich.Sponsors.Commands
                 return;
             }
 
-            var ui = new SponsorsAdminEui();
+            var ui = new AdminSponsorsEui();
             _euiManager.OpenEui(ui, player);
         }
     }
@@ -43,7 +43,29 @@ namespace Content.Server.Sich.Sponsors.Commands
                 return;
             }
 
-            var ui = new SponsorsEui();
+            var ui = new SponsorListEui();
+            _euiManager.OpenEui(ui, player);
+        }
+    }
+
+    [AnyCommand]
+    public sealed class OpenPersonalSponsorWindowCommand : LocalizedEntityCommands
+    {
+        [Dependency] private readonly EuiManager _euiManager = default!;
+
+        public override string Command => "sponsorsettings"; // Або можеш змінити на "sponsorpersonal"
+
+        public override void Execute(IConsoleShell shell, string argStr, string[] args)
+        {
+            var player = shell.Player;
+            if (player == null)
+            {
+                shell.WriteLine(Loc.GetString("shell-cannot-run-command-from-server"));
+                return;
+            }
+
+            // Відкриваємо наше нове вікно персональних налаштувань
+            var ui = new PersonalSponsorEui();
             _euiManager.OpenEui(ui, player);
         }
     }

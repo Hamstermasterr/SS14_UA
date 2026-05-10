@@ -2,6 +2,7 @@ using Content.Server.Access.Systems;
 using Content.Server.Humanoid;
 using Content.Server.Mind;
 using Content.Server.PDA;
+using Content.Server.Sich.Sponsors;
 using Content.Server.Station.Components;
 using Content.Shared.Access.Components;
 using Content.Shared.Access.Systems;
@@ -44,6 +45,19 @@ public sealed class StationSpawningSystem : SharedStationSpawningSystem
     [Dependency] private readonly PdaSystem _pdaSystem = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly MindSystem _mindSystem = default!;
+    [Dependency] private readonly ISponsorManager _sponsorManager = default!;
+
+    protected override bool IsLoadoutAllowed(EntityUid entity, LoadoutPrototype proto)
+    {
+        if (string.IsNullOrEmpty(proto.SponsorTag))
+            return true;
+
+        if (!TryComp<ActorComponent>(entity, out var actor))
+        {
+            return true;
+        }
+        return _sponsorManager.HasTag(actor.PlayerSession.UserId, proto.SponsorTag);
+    }
 
     /// <summary>
     /// Attempts to spawn a player character onto the given station.

@@ -755,6 +755,20 @@ namespace Content.Shared.Preferences
             return profile;
         }
 
+        public HumanoidCharacterProfile WithLoadouts(Dictionary<string, RoleLoadout> loadouts)
+        {
+            var profile = Clone();
+            var copied = new Dictionary<string, RoleLoadout>(loadouts.Count);
+
+            foreach (var (role, loadout) in loadouts)
+            {
+                copied[role] = loadout.Clone();
+            }
+
+            profile._loadouts = copied;
+            return profile;
+        }
+
         public RoleLoadout GetLoadoutOrDefault(string id, ICommonSession? session, ProtoId<SpeciesPrototype>? species, IEntityManager entManager, IPrototypeManager protoManager)
         {
             if (!_loadouts.TryGetValue(id, out var loadout))
