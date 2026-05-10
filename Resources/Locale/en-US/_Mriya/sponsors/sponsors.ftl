@@ -17,7 +17,7 @@ sponsors-eui-edit-sponsor-rank-window-title = Редагувати ранг сп
 sponsors-eui-edit-sponsor-window-save-button = Зберегти
 sponsors-eui-edit-sponsor-window-remove-flag-button = Прибрати
 
-sponsors-open-panel = Класні люди Січі
+sponsors-open-panel = Класні Мрійники
 
 cmd-sponsors-desc = Opens the sponsor permissions panel.
 cmd-sponsors-help = Usage: permissions
