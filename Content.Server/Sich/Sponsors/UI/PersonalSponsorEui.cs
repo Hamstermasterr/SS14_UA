@@ -14,6 +14,7 @@ public sealed class PersonalSponsorEui : BaseEui
     [Dependency] private readonly IServerDbManager _db = default!;
     [Dependency] private readonly ISponsorManager _sponsorManager = default!;
     [Dependency] private readonly ILogManager _logManager = default!;
+    [Dependency] private readonly IEntityManager _entManager = default!;
 
     private ISawmill _sawmill = default!;
 
@@ -169,6 +170,7 @@ public sealed class PersonalSponsorEui : BaseEui
             await _db.UpdateSponsorAsync(_cachedSponsor);
             _sponsorManager.UpdateCache(Player.UserId, _cachedSponsor);
             _sawmill.Info($"Player {Player.UserId} successfully updated their personal sponsor settings.");
+            _entManager.EventBus.RaiseEvent(EventSource.Local, new SaveGhostColorEvent(Player));
             StateDirty();
         }
     }
@@ -185,3 +187,5 @@ public sealed class PersonalSponsorEui : BaseEui
         return null;
     }
 }
+
+public record struct SaveGhostColorEvent(ICommonSession Session);

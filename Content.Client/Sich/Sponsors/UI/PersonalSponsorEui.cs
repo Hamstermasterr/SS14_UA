@@ -338,7 +338,7 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 var fixedColor = isGhost ? rank.FixedGhostColor : rank.FixedOocColor;
                 if (!string.IsNullOrEmpty(fixedColor))
                 {
-                    dropdown.AddItem(Loc.GetString("sponsors-eui-personal-dropdown-rank", ("rank", rank.Name)), rank.Id);
+                    dropdown.AddItem(Loc.GetString("sponsors-eui-personal-dropdown-rank", ("rank", rank.Name)));
                 }
             }
         }
