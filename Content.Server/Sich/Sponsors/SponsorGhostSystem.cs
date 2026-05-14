@@ -22,7 +22,6 @@ public sealed class SponsorGhostSystem : EntitySystem
 
     private void OnGhostColorSaved(SaveGhostColorEvent ev)
     {
-        Logger.Debug($"SAVE GHOST COLOR FOR {ev.Session}");
         var session = ev.Session;
         if (session.AttachedEntity is not { } entity)
             return;

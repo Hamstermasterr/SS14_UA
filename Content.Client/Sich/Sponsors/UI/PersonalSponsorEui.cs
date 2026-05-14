@@ -84,9 +84,11 @@ public sealed partial class PersonalSponsorEui : BaseEui
         public readonly Label NameLabel;
         public readonly BoxContainer RanksContainer;
 
+        public readonly Label GhostLabel;
         public readonly OptionButton GhostDropdown;
         public readonly ColorSelectorSliders GhostColorPicker;
 
+        public readonly Label OocLabel;
         public readonly OptionButton OocDropdown;
         public readonly ColorSelectorSliders OocColorPicker;
 
@@ -99,7 +101,19 @@ public sealed partial class PersonalSponsorEui : BaseEui
             MinSize = new Vector2(450, 550);
 
             var playerManager = IoCManager.Resolve<IPlayerManager>();
-            var playerName = playerManager.LocalPlayer?.Name ?? Loc.GetString("sponsors-eui-personal-player-fallback");
+            var playerName = playerManager.LocalSession?.Name ?? Loc.GetString("sponsors-eui-personal-player-fallback");
+
+            GhostLabel = new Label
+            {
+                Text = Loc.GetString("sponsors-eui-personal-ghost-color"),
+                StyleClasses = { StyleClass.LabelHeading }
+            };
+
+            OocLabel = new Label
+            {
+                Text = Loc.GetString("sponsors-eui-personal-ooc-color"),
+                StyleClasses = { StyleClass.LabelHeading }
+            };
 
             NameLabel = new Label
             {
@@ -140,6 +154,11 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 Visible = false
             };
 
+            GhostColorPicker.OnColorChanged += color =>
+            {
+                GhostLabel.FontColorOverride = color;
+            };
+
             GhostDropdown.OnItemSelected += args =>
             {
                 GhostDropdown.SelectId(args.Id);
@@ -152,7 +171,7 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 Margin = new Thickness(0, 0, 0, 15),
                 Children =
                 {
-                    new Label { Text = Loc.GetString("sponsors-eui-personal-ghost-color"), StyleClasses = { StyleClass.LabelHeading } },
+                    GhostLabel,
                     GhostDropdown,
                     GhostColorPicker
                 }
@@ -163,6 +182,11 @@ public sealed partial class PersonalSponsorEui : BaseEui
             {
                 SelectorType = ColorSelectorSliders.ColorSelectorType.Hsv,
                 Visible = false
+            };
+
+            OocColorPicker.OnColorChanged += color =>
+            {
+                OocLabel.FontColorOverride = color;
             };
 
             OocDropdown.OnItemSelected += args =>
@@ -176,7 +200,7 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 Orientation = LayoutOrientation.Vertical,
                 Children =
                 {
-                    new Label { Text = Loc.GetString("sponsors-eui-personal-ooc-color"), StyleClasses = { StyleClass.LabelHeading } },
+                    OocLabel,
                     OocDropdown,
                     OocColorPicker
                 }
@@ -291,17 +315,24 @@ public sealed partial class PersonalSponsorEui : BaseEui
             {
                 GhostDropdown.SelectId(state.SelectedGhostRankId.Value);
                 GhostColorPicker.Visible = false;
+                var ghostColor = state.AllowedRanks.FirstOrDefault(x => x.Id == state.SelectedGhostRankId).FixedGhostColor;
+                if (ghostColor != null)
+                    GhostLabel.FontColorOverride = Color.FromHex(ghostColor);
+                else
+                    GhostLabel.FontColorOverride = null;
             }
             else if (!string.IsNullOrEmpty(state.CurrentGhostColor) && state.CanSetCustomGhostColor)
             {
                 GhostDropdown.SelectId(OptionCustom);
                 GhostColorPicker.Visible = true;
                 GhostColorPicker.Color = Color.FromHex(state.CurrentGhostColor);
+                GhostLabel.FontColorOverride = Color.FromHex(state.CurrentGhostColor);
             }
             else
             {
                 GhostDropdown.SelectId(OptionNone);
                 GhostColorPicker.Visible = false;
+                GhostLabel.FontColorOverride = null;
             }
 
             // Встановлюємо збережені значення для OOC
@@ -309,17 +340,24 @@ public sealed partial class PersonalSponsorEui : BaseEui
             {
                 OocDropdown.SelectId(state.SelectedOocRankId.Value);
                 OocColorPicker.Visible = false;
+                var oocColor = state.AllowedRanks.FirstOrDefault(x => x.Id == state.SelectedOocRankId).FixedOocColor;
+                if (oocColor != null)
+                    OocLabel.FontColorOverride = Color.FromHex(oocColor);
+                else
+                    OocLabel.FontColorOverride = null;
             }
             else if (!string.IsNullOrEmpty(state.CurrentOocColor) && state.CanSetCustomOocColor)
             {
                 OocDropdown.SelectId(OptionCustom);
                 OocColorPicker.Visible = true;
                 OocColorPicker.Color = Color.FromHex(state.CurrentOocColor);
+                OocLabel.FontColorOverride = Color.FromHex(state.CurrentOocColor);
             }
             else
             {
                 OocDropdown.SelectId(OptionNone);
                 OocColorPicker.Visible = false;
+                OocLabel.FontColorOverride = null;
             }
         }
 
@@ -338,7 +376,7 @@ public sealed partial class PersonalSponsorEui : BaseEui
                 var fixedColor = isGhost ? rank.FixedGhostColor : rank.FixedOocColor;
                 if (!string.IsNullOrEmpty(fixedColor))
                 {
-                    dropdown.AddItem(Loc.GetString("sponsors-eui-personal-dropdown-rank", ("rank", rank.Name)));
+                    dropdown.AddItem(Loc.GetString("sponsors-eui-personal-dropdown-rank", ("rank", rank.Name)), rank.Id);
                 }
             }
         }
