@@ -5,12 +5,8 @@
   minLimit: 0
   maxLimit: 3
   loadouts:
-  - FlowerWreath
-  - Hairflower
-  - Headphones
   - PlushieLizard
   - PlushieSpaceLizard
-  - ThreeCandles
   - Lighter
   - CigPackGreen
   - CigPackRed
@@ -18,34 +14,18 @@
   - CigPackBlack
   - CigarCase
   - CigarGold
-  - BoxFolderBaseThreePapers
-  - BoxFolderPlasticClipboardThreePapers
-  - BoxFolderClipboardThreePapers
   - ClothingNeckLGBTPin
-  - ClothingNeckAllyPin
   - ClothingNeckAromanticPin
   - ClothingNeckAsexualPin
-  - ClothingNeckAroacePin
   - ClothingNeckBisexualPin
   - ClothingNeckGayPin
   - ClothingNeckIntersexPin
   - ClothingNeckLesbianPin
   - ClothingNeckNonBinaryPin
   - ClothingNeckPansexualPin
-  - ClothingNeckPluralPin
-  - ClothingNeckOmnisexualPin
-  - ClothingNeckGenderqueerPin
-  - ClothingNeckGenderfluidPin
   - ClothingNeckTransPin
   - ClothingNeckAutismPin
   - ClothingNeckGoldAutismPin
-  - OffsetCane
-  - OffsetCaneWood
-  - OffsetCaneClown
-  - OffsetCaneMime
-  - OffsetCaneNT
-  - Cane
-  - TowelColorWhite
 
 - type: loadoutGroup
   id: Glasses
@@ -53,6 +33,10 @@
   minLimit: 0
   loadouts:
   - Glasses
+  - GarGlasses
+  - OrangeGarGlasses
+  - GigaGarGlasses
+  - CheapSunglasses
   - GlassesJamjar
   - GlassesJensen
 
@@ -73,9 +57,7 @@
   - EmergencyNitrogen
   - EmergencyOxygen
   - LoadoutSpeciesVoxNitrogen
-  - EmergencySpecialTajar #додано для Січі
 
-# nitrogen or oxygen tank, depending on what your species needs
 - type: loadoutGroup
   id: GroupEVATank
   name: loadout-group-EVA-tank
@@ -83,14 +65,6 @@
   loadouts:
   - LoadoutSpeciesEVANitrogen
   - LoadoutSpeciesEVAOxygen
-
-# vox get a nitrogen tank, other species get nothing
-- type: loadoutGroup
-  id: GroupEVATankVox
-  name: loadout-group-vox-tank
-  hidden: true
-  loadouts:
-  - LoadoutSpeciesVoxNitrogen
 
 - type: loadoutGroup
   id: GroupPocketTankDouble
@@ -142,12 +116,6 @@
   - CaptainOuterClothing
   - CaptainWintercoat
 
-#- type: loadoutGroup
-#  id: CaptainJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts: []
-
 - type: loadoutGroup
   id: HoPHead
   name: loadout-group-hop-head
@@ -186,12 +154,6 @@
   loadouts:
   - HoPWintercoat
 
-#- type: loadoutGroup
-#  id: HoPJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts: []
-
 # Civilian
 - type: loadoutGroup
   id: PassengerJumpsuit
@@ -199,9 +161,48 @@
   loadouts:
   - GreyJumpsuit
   - GreyJumpskirt
+  - WhiteJumpsuit
+  - WhiteJumpskirt
+  - BlackJumpsuit
+  - BlackJumpskirt
+  - BlueJumpsuit
+  - BlueJumpskirt
+  - YellowJumpsuit
+  - YellowJumpskirt
+  - DarkBlueJumpsuit
+  - DarkBlueJumpskirt
+  - TealJumpsuit
+  - TealJumpskirt
+  - GreenJumpsuit
+  - GreenJumpskirt
+  - DarkGreenJumpsuit
+  - DarkGreenJumpskirt
+  - OrangeJumpsuit
+  - OrangeJumpskirt
+  - PinkJumpsuit
+  - PinkJumpskirt
+  - PurpleJumpsuit
+  - PurpleJumpskirt
+  - LightBrownJumpsuit
+  - LightBrownJumpskirt
+  - BrownJumpsuit
+  - BrownJumpskirt
+  - MaroonJumpsuit
+  - MaroonJumpskirt
+  - HawaiiBlack
+  - HawaiiBlue
+  - HawaiiRed
+  - HawaiiYellow
+  - FlannelRed
+  - Loungewear
+  - CasualBlueJumpsuit
+  - CasualBlueJumpskirt
+  - CasualPurpleJumpsuit
+  - CasualPurpleJumpskirt
+  - CasualRedJumpsuit
+  - CasualRedJumpskirt
   - AncientJumpsuit
   - RainbowJumpsuit
-  - RainbowJumpskirt
 
 - type: loadoutGroup
   id: PassengerFace
@@ -215,7 +216,7 @@
   name: loadout-group-passenger-gloves
   minLimit: 0
   loadouts:
-  - PassengerGloves
+  - FingerlessInsuls
 
 - type: loadoutGroup
   id: CommonBackpack
@@ -238,19 +239,24 @@
   minLimit: 0
   loadouts:
   - PassengerWintercoat
+  - BomberCoat
+  - GentleCoat
+  - JensenCoat
 
 - type: loadoutGroup
   id: PassengerShoes
   name: loadout-group-passenger-shoes
   loadouts:
   - BlackShoes
+  - WhiteShoes
+  - BrownShoes
+  - GreenShoes
+  - OrangeShoes
+  - RedShoes
+  - YellowShoes
+  - PurpleShoes
+  - TouristShoes
   - WinterBoots
-
-#- type: loadoutGroup
-#  id: PassengerJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts: []
 
 - type: loadoutGroup
   id: BartenderHead
@@ -276,19 +282,6 @@
   - BartenderVest
   - BartenderApron
   - BartenderWintercoat
-
-- type: loadoutGroup
-  id: BartenderJobTrinkets
-  name: loadout-group-jobtrinkets
-  minLimit: 0
-  loadouts:
-  - BartenderGoldenShaker
-
-#- type: loadoutGroup
-#  id: ServiceWorkerJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
 
 - type: loadoutGroup
   id: ChefHead
@@ -320,12 +313,6 @@
   - ChefJacket
   - ChefWintercoat
 
-#- type: loadoutGroup
-#  id: ChefJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 - type: loadoutGroup
   id: LibrarianJumpsuit
   name: loadout-group-librarian-jumpsuit
@@ -334,12 +321,6 @@
   - LibrarianJumpskirt
   - CuratorJumpsuit
   - CuratorJumpskirt
-
-#- type: loadoutGroup
-#  id: LibrarianJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
 
 - type: loadoutGroup
   id: LawyerJumpsuit
@@ -362,12 +343,6 @@
   minLimit: 0
   loadouts:
   - LawyerNeck
-
-#- type: loadoutGroup
-#  id: LawyerJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
 
 - type: loadoutGroup
   id: ChaplainHead
@@ -413,24 +388,6 @@
   loadouts:
   - ChaplainNeck
 
-#- type: loadoutGroup
-#  id: ChaplainJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
-- type: loadoutGroup
-  id: ChaplainBible
-  name: loadout-group-chaplain-bible
-  minLimit: 1
-  loadouts:
-  - Bible
-  - BibleNanoTrasen
-  - BibleDruid
-  - BibleHonk
-  - BibleRatvar
-  - BibleNarsie
-
 - type: loadoutGroup
   id: JanitorHead
   name: loadout-group-janitor-head
@@ -462,8 +419,8 @@
   - JanitorWintercoat
 
 - type: loadoutGroup
-  id: JanitorJobTrinkets
-  name: loadout-group-jobtrinkets
+  id: JanitorPlunger
+  name: loadout-group-janitor-plunger
   minLimit: 0
   loadouts:
   - JanitorGoldenPlunger
@@ -500,12 +457,6 @@
   - BotanistApron
   - BotanistWintercoat
 
-#- type: loadoutGroup
-#  id: BotanistJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 - type: loadoutGroup
   id: ClownHead
   name: loadout-group-clown-head
@@ -513,7 +464,6 @@
   loadouts:
   - JesterHat
   - JesterAltHat
-  - ClownMitre
 
 - type: loadoutGroup
   id: ClownJumpsuit
@@ -556,14 +506,6 @@
   - EmergencyNitrogenClown
   - EmergencyOxygenClown
   - LoadoutSpeciesVoxNitrogen
-  - EmergencySpecialTajar #додано для Січі
-
-- type: loadoutGroup
-  id: ClownJobTrinkets
-  name: loadout-group-jobtrinkets
-  minLimit: 0
-  loadouts:
-  - FlowerWaterClown
 
 - type: loadoutGroup
   id: MimeHead
@@ -619,15 +561,7 @@
   loadouts:
   - EmergencyNitrogenMime
   - EmergencyOxygenMime
-  - EmergencySpeciesMothMime
   - LoadoutSpeciesVoxNitrogen
-  - EmergencySpecialTajar #додано для Січі
-
-#- type: loadoutGroup
-#  id: MimeJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
 
 - type: loadoutGroup
   id: MusicianJumpsuit
@@ -678,12 +612,6 @@
   - Ocarina
   - Bagpipe
 
-#- type: loadoutGroup
-#  id: MusicianJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 # Cargo
 - type: loadoutGroup
   id: QuartermasterHead
@@ -725,12 +653,6 @@
   - BrownShoes
   - CargoWinterBoots
 
-#- type: loadoutGroup
-#  id: QuartermasterJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 - type: loadoutGroup
   id: CargoTechnicianHead
   name: loadout-group-cargo-technician-head
@@ -768,19 +690,6 @@
   - CargoWinterBoots
 
 - type: loadoutGroup
-  id: CargoTechnicianID
-  name: loadout-group-cargo-technician-id
-  loadouts:
-  - CargoTechnicianPDA
-  - SeniorCourierPDA
-
-#- type: loadoutGroup
-#  id: CargoTechnicianJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
-- type: loadoutGroup
   id: SalvageSpecialistBackpack
   name: loadout-group-salvage-specialist-backpack
   loadouts:
@@ -801,12 +710,6 @@
   loadouts:
   - SalvageBoots
   - CargoWinterBoots
-
-#- type: loadoutGroup
-#  id: SalvageSpecialistJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
 
 # Engineering
 - type: loadoutGroup
@@ -848,12 +751,6 @@
   - BrownShoes
   - EngineeringWinterBoots
 
-#- type: loadoutGroup
-#  id: ChiefEngineerJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 - type: loadoutGroup
   id: TechnicalAssistantJumpsuit
   name: loadout-group-technical-assistant-jumpsuit
@@ -861,16 +758,9 @@
   - YellowJumpsuit
   - YellowJumpskirt
 
-#- type: loadoutGroup
-#  id: TechnicalAssistantJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 - type: loadoutGroup
   id: StationEngineerHead
   name: loadout-group-station-engineer-head
-  minLimit: 0
   loadouts:
   - StationEngineerHardhatYellow
   - StationEngineerHardhatOrange
@@ -917,12 +807,6 @@
   - StationEngineerPDA
   - SeniorEngineerPDA
 
-#- type: loadoutGroup
-#  id: StationEngineerJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 - type: loadoutGroup
   id: AtmosphericTechnicianJumpsuit
   name: loadout-group-atmospheric-technician-jumpsuit
@@ -953,12 +837,6 @@
   - WhiteShoes
   - EngineeringWinterBoots
 
-#- type: loadoutGroup
-#  id: AtmosphericTechnicianJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 - type: loadoutGroup
   id: SurvivalExtended
   name: loadout-group-survival-extended
@@ -968,7 +846,6 @@
   - EmergencyNitrogenExtended
   - EmergencyOxygenExtended
   - LoadoutSpeciesVoxNitrogen
-  - EmergencySpecialTajar #додано для Січі
 
 # Science
 - type: loadoutGroup
@@ -1007,12 +884,6 @@
   loadouts:
   - BrownShoes
   - ScienceWinterBoots
-
-#- type: loadoutGroup
-#  id: ResearchDirectorJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
 
 - type: loadoutGroup
   id: ScientistHead
@@ -1085,24 +956,12 @@
   - ScientistPDA
   - SeniorResearcherPDA
 
-#- type: loadoutGroup
-#  id: ScientistJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
 - type: loadoutGroup
   id: ResearchAssistantJumpsuit
   name: loadout-group-research-assistant-jumpsuit
   loadouts:
   - WhiteJumpsuit
   - WhiteJumpskirt
-
-#- type: loadoutGroup
-#  id: ResearchAssistantJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
 
 # Security
 - type: loadoutGroup
@@ -1140,13 +999,6 @@
   - HeadofSecurityWinterCoat
 
 - type: loadoutGroup
-  id: HeadofSecurityJobTrinkets
-  name: loadout-group-jobtrinkets
-  minLimit: 0
-  loadouts:
-  - SecStar
-
-- type: loadoutGroup
   id: WardenHead
   name: loadout-group-warden-head
   minLimit: 0
@@ -1167,13 +1019,6 @@
   loadouts:
   - WardenCoat
   - WardenArmoredWinterCoat
-
-- type: loadoutGroup
-  id: WardenJobTrinkets
-  name: loadout-group-jobtrinkets
-  minLimit: 0
-  loadouts:
-  - SecStar
 
 - type: loadoutGroup
   id: SecurityHead
@@ -1235,13 +1080,6 @@
   - SeniorOfficerPDA
 
 - type: loadoutGroup
-  id: SecurityJobTrinkets
-  name: loadout-group-jobtrinkets
-  minLimit: 0
-  loadouts:
-  - SecStar
-
-- type: loadoutGroup
   id: DetectiveHead
   name: loadout-group-detective-head
   minLimit: 0
@@ -1268,17 +1106,11 @@
 - type: loadoutGroup
   id: DetectiveOuterClothing
   name: loadout-group-detective-outerclothing
+  minLimit: 0
   loadouts:
   - DetectiveArmorVest
   - DetectiveCoat
   - DetectiveCoatGrey
-
-- type: loadoutGroup
-  id: DetectiveJobTrinkets
-  name: loadout-group-jobtrinkets
-  minLimit: 0
-  loadouts:
-  - SecStar
 
 - type: loadoutGroup
   id: SecurityCadetJumpsuit
@@ -1286,12 +1118,6 @@
   loadouts:
   - RedJumpsuit
   - RedJumpskirt
-
-#- type: loadoutGroup
-#  id: SecurityCadetJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
 
 - type: loadoutGroup
   id: SurvivalSecurity
@@ -1302,7 +1128,21 @@
   - EmergencyNitrogenSecurity
   - EmergencyOxygenSecurity
   - LoadoutSpeciesVoxNitrogen
-  - EmergencySpecialTajar #додано для Січі
+
+- type: loadoutGroup
+  id: SecurityStar
+  name: loadout-group-security-star
+  minLimit: 0
+  loadouts:
+  - SecStar
+
+- type: loadoutGroup
+  id: MedicalGloves
+  name: loadout-group-medical-gloves
+  minLimit: 0
+  loadouts:
+  - LatexGloves
+  - NitrileGloves
 
 # Wildcards
 - type: loadoutGroup
@@ -1313,37 +1153,27 @@
   - JournalistJumpsuit
 
 - type: loadoutGroup
-  id: ReporterHead
-  name: loadout-group-reporter-head
-  minLimit: 0
-  loadouts:
-  - ReporterPressFedora
-
-- type: loadoutGroup
-  id: ReporterOuterClothing
-  name: loadout-group-reporter-outerclothing
-  minLimit: 0
-  loadouts:
-  - ReporterPressVest
-
-#- type: loadoutGroup
-#  id: ReporterJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
-
-- type: loadoutGroup
   id: PsychologistJumpsuit
   name: loadout-group-psychologist-jumpsuit
   loadouts:
   - PsychologistJumpsuit
   - PsychologistJumpskirt
 
-#- type: loadoutGroup
-#  id: PsychologistJobTrinkets
-#  name: loadout-group-jobtrinkets
-#  minLimit: 0
-#  loadouts:
+- type: loadoutGroup
+  id: BoxerJumpsuit
+  name: loadout-group-boxer-jumpsuit
+  loadouts:
+  - BoxerShorts
+  - BoxerShortsWithTop
+
+- type: loadoutGroup
+  id: BoxerGloves
+  name: loadout-group-boxer-gloves
+  loadouts:
+  - RedBoxingGloves
+  - BlueBoxingGloves
+  - GreenBoxingGloves
+  - YellowBoxingGloves
 
 # Other
 - type: loadoutGroup
@@ -1355,16 +1185,6 @@
   - EmergencyNitrogenSyndicate
   - EmergencyOxygenSyndicate
   - LoadoutSpeciesVoxNitrogen
-  - EmergencySpecialTajar #додано для Січі
-
-- type: loadoutGroup
-  id: SurvivalMilitaryDouble
-  name: loadout-group-survival-military
-  minLimit: 2
-  hidden: true
-  loadouts:
-  - EmergencyNitrogenMilitaryDouble
-  - EmergencyOxygenMilitaryDouble
 
 - type: loadoutGroup
   id: GroupSpeciesBreathTool
