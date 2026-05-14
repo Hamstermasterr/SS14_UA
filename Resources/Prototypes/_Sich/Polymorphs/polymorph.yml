@@ -1,0 +1,11 @@
+- type: polymorph
+  id: PoltergeistJaunt
+  configuration:
+    entity: PoltergeistJaunt
+    transferName: true
+    inventory: None
+    forced: true
+    revertOnDeath: true
+    revertOnCrit: true
+    allowRepeatedMorphs: false
+    duration: 5
