@@ -55,6 +55,11 @@
   - Glasses
   - GlassesJamjar
   - GlassesJensen
+  # MRIYA DOWN
+  - MRGarGlasses
+  - MROrangeGarGlasses
+  - MRGigaGarGlasses
+  - MRCheapSunglasses
 
 - type: loadoutGroup
   id: GroupTankHarness
@@ -202,6 +207,47 @@
   - AncientJumpsuit
   - RainbowJumpsuit
   - RainbowJumpskirt
+  # MRIYA DOWN
+  - MRWhiteJumpsuit
+  - MRWhiteJumpskirt
+  - MRBlackJumpsuit
+  - MRBlackJumpskirt
+  - MRBlueJumpsuit
+  - MRBlueJumpskirt
+  - MRYellowJumpsuit
+  - MRYellowJumpskirt
+  - MRDarkBlueJumpsuit
+  - MRDarkBlueJumpskirt
+  - MRTealJumpsuit
+  - MRTealJumpskirt
+  - MRGreenJumpsuit
+  - MRGreenJumpskirt
+  - MRDarkGreenJumpsuit
+  - MRDarkGreenJumpskirt
+  - MROrangeJumpsuit
+  - MROrangeJumpskirt
+  - MRPinkJumpsuit
+  - MRPinkJumpskirt
+  - MRPurpleJumpsuit
+  - MRPurpleJumpskirt
+  - MRLightBrownJumpsuit
+  - MRLightBrownJumpskirt
+  - MRBrownJumpsuit
+  - MRBrownJumpskirt
+  - MRMaroonJumpsuit
+  - MRMaroonJumpskirt
+  - MRHawaiiBlack
+  - MRHawaiiBlue
+  - MRHawaiiRed
+  - MRHawaiiYellow
+  - MRFlannelRed
+  - MRLoungewear
+  - MRCasualBlueJumpsuit
+  - MRCasualBlueJumpskirt
+  - MRCasualPurpleJumpsuit
+  - MRCasualPurpleJumpskirt
+  - MRCasualRedJumpsuit
+  - MRCasualRedJumpskirt
 
 - type: loadoutGroup
   id: PassengerFace
@@ -238,6 +284,9 @@
   minLimit: 0
   loadouts:
   - PassengerWintercoat
+  - MRBomberCoat
+  - MRGentleCoat
+  - MRJensenCoat
 
 - type: loadoutGroup
   id: PassengerShoes
@@ -245,6 +294,15 @@
   loadouts:
   - BlackShoes
   - WinterBoots
+  # MRIYA DOWN
+  - MRWhiteShoes
+  - MRBrownShoes
+  - MRGreenShoes
+  - MROrangeShoes
+  - MRRedShoes
+  - MRYellowShoes
+  - MRPurpleShoes
+  - MRTouristShoes
 
 #- type: loadoutGroup
 #  id: PassengerJobTrinkets
