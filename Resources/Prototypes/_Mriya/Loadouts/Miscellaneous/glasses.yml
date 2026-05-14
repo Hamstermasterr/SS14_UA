@@ -1,0 +1,24 @@
+- type: loadout
+  id: MRGarGlasses
+  equipment:
+    eyes: ClothingEyesGlassesGar
+  groupBy: "rock"
+
+- type: loadout
+  id: MROrangeGarGlasses
+  equipment:
+    eyes: ClothingEyesGlassesGarOrange
+  groupBy: "rock"
+
+- type: loadout
+  id: MRGigaGarGlasses
+  equipment:
+    eyes: ClothingEyesGlassesGarGiga
+  groupBy: "rock"
+
+- type: loadout
+  id: MRCheapSunglasses
+  equipment:
+    eyes: ClothingEyesGlassesCheapSunglasses
+  sponsorTag: "sponsorGlases_1"
+  

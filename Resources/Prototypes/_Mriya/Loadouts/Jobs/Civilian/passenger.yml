@@ -1,0 +1,473 @@
+# SmallTide Time
+- type: loadoutEffectGroup
+  id: MRSmallTide
+  effects:
+  - !type:JobRequirementLoadoutEffect
+    requirement:
+      !type:RoleTimeRequirement
+      role: JobPassenger
+      time: 18000 #5 hrs, stopgap for newbies and raiders
+
+# White
+- type: loadout
+  id: MRWhiteJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorWhite
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRWhiteJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorWhite
+  groupBy: "colorful"
+
+
+# Black
+- type: loadout
+  id: MRBlackJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorBlack
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRBlackJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorBlack
+  groupBy: "colorful"
+
+# Blue
+- type: loadout
+  id: MRBlueJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorBlue
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRBlueJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorBlue
+  groupBy: "colorful"
+
+# Yellow
+- type: loadout
+  id: MRYellowJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorYellow
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRYellowJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorYellow
+  groupBy: "colorful"
+
+# Dark Blue
+- type: loadout
+  id: MRDarkBlueJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorDarkBlue
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRDarkBlueJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorDarkBlue
+  groupBy: "colorful"
+
+# Teal
+- type: loadout
+  id: MRTealJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorTeal
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRTealJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorTeal
+  groupBy: "colorful"
+
+# Green
+- type: loadout
+  id: MRGreenJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorGreen
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRGreenJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorGreen
+  groupBy: "colorful"
+
+# Dark Green
+- type: loadout
+  id: MRDarkGreenJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorDarkGreen
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRDarkGreenJumpskirt 
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorDarkGreen
+  groupBy: "colorful"
+
+# Orange
+- type: loadout
+  id: MROrangeJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorOrange
+  groupBy: "colorful"
+
+- type: loadout
+  id: MROrangeJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorOrange
+  groupBy: "colorful"
+
+# Pink
+- type: loadout
+  id: MRPinkJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorPink
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRPinkJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorPink
+  groupBy: "colorful"
+
+# Purple
+- type: loadout
+  id: MRPurpleJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorPurple
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRPurpleJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorPurple
+  groupBy: "colorful"
+
+# Light Brown
+- type: loadout
+  id: MRLightBrownJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorLightBrown
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRLightBrownJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorLightBrown
+  groupBy: "colorful"
+
+# Brown
+- type: loadout
+  id: MRBrownJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorBrown
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRBrownJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorBrown
+  groupBy: "colorful"
+
+# Maroon
+- type: loadout
+  id: MRMaroonJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitColorMaroon
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRMaroonJumpskirt 
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtColorMaroon
+  groupBy: "colorful"
+
+# Casual Blue
+- type: loadout
+  id: MRCasualBlueJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitCasualBlue
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRCasualBlueJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtCasualBlue
+  groupBy: "colorful"
+
+# Casual Purple
+- type: loadout
+  id: MRCasualPurpleJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitCasualPurple
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRCasualPurpleJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtCasualPurple
+  groupBy: "colorful"
+
+# Casual Red
+- type: loadout
+  id: MRCasualRedJumpsuit
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitCasualRed
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRCasualRedJumpskirt
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpskirtCasualRed
+  groupBy: "colorful"
+
+# Hawaiian Shirts
+- type: loadout
+  id: MRHawaiiBlack
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitHawaiBlack
+  groupBy: "unique"
+  sponsorTag: "sponsorJumpSuit_1"
+
+- type: loadout
+  id: MRHawaiiBlue
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitHawaiBlue
+  groupBy: "unique"
+  sponsorTag: "sponsorJumpSuit_1"
+
+- type: loadout
+  id: MRHawaiiRed
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitHawaiRed
+  groupBy: "unique"
+  sponsorTag: "sponsorJumpSuit_2"
+
+- type: loadout
+  id: MRHawaiiYellow
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitHawaiYellow
+  groupBy: "unique"
+  sponsorTag: "sponsorJumpSuit_2"
+
+# Flannel
+- type: loadout
+  id: MRFlannelRed
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitFlannel
+  groupBy: "unique"
+  sponsorTag: "sponsorJumpSuit_3"
+
+# Loungewear
+- type: loadout
+  id: MRLoungewear
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment: 
+    jumpsuit: ClothingUniformJumpsuitLoungewear
+  groupBy: "unique"
+  sponsorTag: "sponsorJumpSuit_3"
+
+# Outerclothing
+- type: loadout
+  id: MRBomberCoat
+  equipment:
+    outerClothing: ClothingOuterCoatBomber
+  sponsorTag: "sponsorOuterclothing_1"
+
+- type: loadout
+  id: MRGentleCoat
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment:
+    outerClothing: ClothingOuterCoatGentle
+  sponsorTag: "sponsorOuterclothing_2"
+
+- type: loadout
+  id: MRJensenCoat
+  effects:
+  - !type:GroupLoadoutEffect
+    proto: MRSmallTide
+  equipment:
+    outerClothing: ClothingOuterCoatJensen
+  sponsorTag: "sponsorOuterclothing_2"
+
+# Shoes
+
+- type: loadout
+  id: MRWhiteShoes
+  equipment:
+    shoes: ClothingShoesColorWhite
+  groupBy: "colorful"
+  
+  
+- type: loadout
+  id: MRBrownShoes
+  equipment:
+    shoes: ClothingShoesColorBrown
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRGreenShoes
+  equipment:
+    shoes: ClothingShoesColorGreen
+  groupBy: "colorful"
+
+- type: loadout
+  id: MROrangeShoes
+  equipment:
+    shoes: ClothingShoesColorOrange
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRRedShoes
+  equipment:
+    shoes: ClothingShoesColorRed
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRYellowShoes
+  equipment:
+    shoes: ClothingShoesColorYellow
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRPurpleShoes
+  equipment:
+    shoes: ClothingShoesColorPurple
+  groupBy: "colorful"
+
+- type: loadout
+  id: MRTouristShoes
+  equipment:
+    shoes: ClothingShoesTourist
+  sponsorTag: "sponsorShoes_1"
+
