@@ -1,0 +1,13 @@
+# Тир 2
+
+- type: technology
+  id: MRCompactReanimation
+  name: research-technology-compact-CompactReanimation
+  icon:
+    sprite: Objects/Specific/Medical/defibsmall.rsi
+    state: icon
+  discipline: CivilianServices
+  tier: 2
+  cost: 7500
+  recipeUnlocks:
+  - MRDefibrillatorCompact

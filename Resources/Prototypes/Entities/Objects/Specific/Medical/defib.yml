@@ -1,7 +1,7 @@
 - type: entity
   id: BaseDefibrillator
   parent: BaseItem
-  name: дефибрилятор
+  name: дефібрилятор
   description: РОЗРЯД! ТЗЗЗЗЗЗ!
   abstract: true
   components:
@@ -68,7 +68,7 @@
 - type: entity
   id: DefibrillatorCompact # This should be a research item at some point
   parent: [ BaseDefibrillator, PowerCellSlotMediumItem ]
-  name: compact defibrillator
+  name: Компактний дефібрилятор
   description: Now in fun size!
   components:
   - type: Sprite

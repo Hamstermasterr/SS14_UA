@@ -1,0 +1,11 @@
+# Рецептик від Пиріжка (замініть на просто "Рецепти" коли щось будете додавати сюди)
+
+- type: latheRecipe
+  id: MRDefibrillatorCompact
+  result: DefibrillatorCompact
+  completetime: 4
+  materials:
+    Steel: 600
+    Plastic: 300
+    Plasma: 200
+    Silver: 100
