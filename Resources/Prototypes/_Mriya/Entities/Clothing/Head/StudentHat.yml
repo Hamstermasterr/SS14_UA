@@ -1,0 +1,20 @@
+- type: entity
+  parent: ClothingHeadBase
+  id: MRStudenthat
+  name: академічна шапочка
+  description: Академічна шапочка, видно, ця людина дуже розумна. Або купила диплом.
+  components:
+  - type: Sprite
+    sprite: _Mriya/Clothing/Head/Misc/student.rsi
+  - type: Clothing
+    sprite: _Mriya/Clothing/Head/Misc/student.rsi
+    slots:
+    - HEAD
+    clothingVisuals:
+      head:
+      - state: equipped-HELMET
+        offset: "0, 0.21875"
+  - type: Tag
+    tags:
+    - PetWearable
+    - CorgiWearable
