@@ -877,3 +877,13 @@
   id: 55
   time: '2026-05-26T14:29:19.0000000+00:00'
   url: https://github.com/Space-station-14-UA/SS14_UA/pull/23
+- author: juststesh
+  changes:
+  - message: Added student graduation hat loadout for scientists (contributor sponsor
+      only).
+    type: Add
+  - message: Moved student hat loadout to _Mriya/test.
+    type: Tweak
+  id: 56
+  time: '2026-05-28T18:35:47.0000000+00:00'
+  url: https://github.com/Space-station-14-UA/SS14_UA/pull/26
