@@ -56,17 +56,17 @@ cargo-console-paper-reason-default = Без причини
 cargo-console-paper-approver-default = Unknown
 cargo-console-paper-print-name = Замовлення №{$orderNumber}
 cargo-console-paper-print-text =
-    [color=#7b6640]█▄ █ ▀█▀[/color] [head=2]НАЗВА СТАНЦІЇ[/head]"
-    [color=#7b6640]█ ▀█ [color=#0000]░[/color]█[color=#0000]░[/color] [/color] [bold]ДАТА:[/bold] __________
+    {"[color=#7b6640]"}█▄ █ ▀█▀{"[/color]"} {"[head=2]"}НАЗВА СТАНЦІЇ{"[/head]"}
+    {"[color=#7b6640]"}█ ▀█ {"[color=#0000]"}░{"[/color]"}█{"[color=#0000]"}░{"[/color]"} {"[/color]"} {"[bold]"}ДАТА:{"[/bold]"} __________
     ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-    [head=3]Замовлення №{$orderNumber}[/head]
+    {"[head=3]"}Замовлення №{$orderNumber}{"[/head]"}
     ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-    [bold]Назва та кількість товарів:[/bold] {$itemName}, x{$orderQuantity}
-    [bold]Замовник:[/bold] {$requester}
-    [bold]Платник:[/bold] {$account} [font="Monospace"]\[{$accountcode}\][/font]
-    [bold]Підстави:[/bold] {$reason}
+    {"[bold]"}Назва та кількість товарів:{"[/bold]"} {$itemName}, x{$orderQuantity}
+    {"[bold]"}Замовник:{"[/bold]"} {$requester}
+    {"[bold]"}Платник:{"[/bold]"} {$account} [font="Monospace"]\[{$accountcode}\][/font]
+    {"[bold]"}Підстави:{"[/bold]"} {$reason}
     ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-    [bold]Підтверджено:[/bold] {$approver}[/bold]
+    {"[bold]"}Підтверджено:{"[/bold]"} {$approver}
     ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
     ПЕЧАТКА/ПІДПИС
 
