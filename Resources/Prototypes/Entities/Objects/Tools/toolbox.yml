@@ -7,6 +7,14 @@
     layers:
       - map: [ base ]
         state: icon
+  # Mriya: add interaction sounds start
+  - type: EmitSoundOnPickup
+    sound:
+      path: /Audio/_Mriya/Items/handling/toolbox_pickup.ogg
+  - type: EmitSoundOnDrop
+    sound:
+      path: /Audio/Items/toolbox_drop.ogg
+  # Mriya: add interaction sounds end
   - type: EmitSoundOnLand
     sound:
       path: /Audio/Items/toolbox_drop.ogg

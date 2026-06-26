@@ -12,6 +12,16 @@
   - type: EmitSoundOnCollide
     sound:
       collection: WeakHit
+  - type: EmitSoundOnPickup # Mriya: add interaction sounds start
+    sound:
+      collection: MRGenericPickup
+      params:
+        volume: -7
+  - type: EmitSoundOnDrop
+    sound:
+      collection: MRGenericDrop
+      params:
+        volume: -7 # Mriya: add interaction sounds end
   - type: EmitSoundOnLand
     sound:
       path: /Audio/Effects/drop.ogg
