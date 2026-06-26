@@ -432,7 +432,7 @@
       left:
       - state: JANI-inhand-left
       right:
-      - state: CHEF-inhand-right
+      - state: JANI-inhand-right
   - type: Clothing
     sprite: Clothing/OuterClothing/WinterCoats/coat.rsi
     clothingVisuals:
@@ -834,7 +834,7 @@
     sprite: Clothing/OuterClothing/WinterCoats/coatnomi.rsi
 
 - type: entity
-  parent: ClothingOuterWinterCoatToggleable
+  parent: [ClothingOuterWinterCoatToggleable, BaseSlicingRefinable]
   id: ClothingOuterWinterWeb
   name: зимове пальто з павутини
   description: Відчуття як у середині кокона. Однак, це не змусить вас менше боятись опинитись в ньому насправді.
@@ -857,8 +857,8 @@
   - type: Construction
     graph: WebObjects
     node: coat
-  - type: Butcherable
-    spawned:
+  - type: ToolRefinable
+    refineResult:
     - id: MaterialWebSilk1
       amount: 5
   - type: FlavorProfile

@@ -52,6 +52,8 @@ chat-manager-admin-channel-name = АДМІН
 chat-manager-rate-limited = Ви відправляєте повідомлення занадто швидко!
 chat-manager-rate-limit-admin-announcement = Попередження про привищення ліміту повідомлень: { $player }
 
+chat-manager-follow-button = (F)
+
 ## Speech verbs for chat
 
 chat-speech-verb-suffix-exclamation = !
@@ -123,6 +125,10 @@ chat-speech-verb-name-goat = Кози
 chat-speech-verb-goat-1 = бекає
 chat-speech-verb-goat-2 = бурчить
 chat-speech-verb-goat-3 = реве
+
+chat-speech-verb-name-sheep = Вівця
+chat-speech-verb-sheep-1 = мекає
+chat-speech-verb-sheep-2 = бекає
 
 chat-speech-verb-name-small-mob = Миші
 chat-speech-verb-small-mob-1 = пищить

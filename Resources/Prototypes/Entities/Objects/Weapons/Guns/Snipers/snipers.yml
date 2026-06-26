@@ -88,8 +88,9 @@
     solution: melee
   - type: SolutionTransfer
     maxTransferAmount: 2
-  - type: Sharp
-    butcherDelayModifier: 2 #It's a bayonet
+  - type: Tool
+    qualities: Slicing
+    speedModifier: 0.5 #It's a bayonet
   - type: GunRequiresWield
   - type: StaticPrice
     price: 500
@@ -138,7 +139,9 @@
   id: Musket
   description: Мушкет, прекрасна зброя щоб показати майстерність використання лінійної тактики ведення бою! Це мало бути в музеї задовго до народження ваших пра дідусів та бабусь... Використовує боєприпаси .60-великокаліберні.
   components:
-  - type: Sharp
+  - type: Tool
+    qualities:
+    - Slicing
   - type: Item
     size: Large
   - type: Sprite
