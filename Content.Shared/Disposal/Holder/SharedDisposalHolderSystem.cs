@@ -33,7 +33,7 @@ public abstract partial class SharedDisposalHolderSystem : EntitySystem
     /// <summary>
     /// Allowed characters for tagging disposed entities.
     /// </summary>
-    public static readonly Regex TagRegex = new("^[a-zA-Z0-9, ]*$", RegexOptions.Compiled);
+    public static readonly Regex TagRegex = new("^[a-zA-Z0-9а-яА-ЯїЇєЄіґҐ, ]*$", RegexOptions.Compiled);
 
     public override void Initialize()
     {
