@@ -1,6 +1,6 @@
 - type: entity
   parent: ClothingUniformBase
-  id: Waitsuit
+  id: MRClothingUniformJumpsuitWaitsuit
   name: Офіційний костюм
   description: Красивий одяг!
   components:
