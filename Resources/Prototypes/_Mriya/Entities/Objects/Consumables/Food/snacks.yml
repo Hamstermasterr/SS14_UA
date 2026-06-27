@@ -10,7 +10,7 @@
     - jelly
     - bee
   - type: Sprite
-    path: _Mriya/Objects/Consumables/Food/bjilka.rsi
+    sprite: _Mriya/Objects/Consumables/Food/bjilka.rsi
     state: bjilka
   - type: Edible
     trash:
@@ -24,5 +24,5 @@
   name: порожня шалена бджілка # empty crazy bee
   compoents:
   - type: Sprite
-    path: _Mriya/Objects/Consumables/Food/bjilka.rsi
+    sprite: _Mriya/Objects/Consumables/Food/bjilka.rsi
     state: bjilka-trash
