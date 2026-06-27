@@ -12,8 +12,8 @@
   - type: Sprite
     path: _Mriya/Objects/Consumables/Food/bjilka.rsi
     state: bjilka
-  - type: Item
-  - type: Food
+  - type: Edible
+    trash:
     trash: MRFoodPacketJellyBeeTrash
 
 # TRASH
@@ -26,4 +26,3 @@
   - type: Sprite
     path: _Mriya/Objects/Consumables/Food/bjilka.rsi
     state: bjilka-trash
-  - type: Item
