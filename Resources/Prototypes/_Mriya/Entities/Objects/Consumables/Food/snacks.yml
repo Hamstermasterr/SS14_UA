@@ -14,7 +14,7 @@
     state: bjilka
   - type: Edible
     trash:
-    trash: MRFoodPacketJellyBeeTrash
+    - MRFoodPacketJellyBeeTrash
 
 # TRASH
 - type: entity
